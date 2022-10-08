@@ -1,13 +1,13 @@
 import logging
 import os
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 from pytube import YouTube
 
 logger = logging.getLogger(__name__)
 
 
-class YouTubeDownloader:
+class YouTubeDownloader(ABC):
 
     def __init__(self, url: str):
         try:
