@@ -11,6 +11,7 @@ class TelegramService:
     This service is responsible for the communication with the telegram bot api as well as to provide any telegram
     object that can be utilized in other services.
     """
+
     def __init__(self, updater: Updater | None = None, bot: Bot | None = None):
         self.bot = bot or updater.bot  # type: ignore
 
@@ -75,4 +76,3 @@ class TelegramService:
         if callback_query := self.get_callback_query(update):
             return callback_query.data
         return self.get_message(update).text
-
