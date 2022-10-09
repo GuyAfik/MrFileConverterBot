@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 python-telegram-bot = "*"
 pytube = "*"
+dependency-injector = "*"
 
 [dev-packages]
 pytest = "*"

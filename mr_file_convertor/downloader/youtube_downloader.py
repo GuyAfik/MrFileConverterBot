@@ -1,28 +1,31 @@
 import logging
 import os
-from abc import ABC, abstractmethod
+from typing import IO, Optional, Union
 
 from pytube import YouTube
+from telegram import Update
+from telegram.ext import ConversationHandler
+
+from mr_file_convertor.telegram.telegram_service import TelegramService
 
 logger = logging.getLogger(__name__)
 
 
-class YouTubeDownloader(ABC):
+class YouTubeDownloader:
 
-    def __init__(self, url: str):
-        try:
-            self._youtube = YouTube(url)
-        except Exception:
-            error_msg = f'invalid YouTube video URL {url}'
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+    def __init__(self, youtube: YouTube, telegram_service: TelegramService):
+        self._youtube = youtube
+        self._telegram_service = telegram_service
         self._path = None
 
-    @abstractmethod
-    def send(self):
-        pass
+    @property
+    def path(self):
+        return self._path
 
     def __enter__(self):
+        pass
+
+    def send(self, update: Update) -> int:
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -39,14 +42,20 @@ class YouTubeVideoDownloader(YouTubeDownloader):
         # returns a file object that the video was downloaded into.
         try:
             self._path = self._youtube.streams.get_highest_resolution().download()
-            return open(self._path, 'rb')
+            return self
         except Exception as e:
             logger.error(
                 f'Could not download youtube video {self._youtube.watch_url}. Error:\n{e}')
             raise e
 
-    def send(self):
-        pass
+    def send(self, update: Update) -> int:
+        self._telegram_service.bot.send_video(
+            chat_id=self._telegram_service.get_chat_id(update),
+            video=open(self._path, 'rb'),  # type: ignore
+            reply_to_message_id=self._telegram_service.get_message_id(update)
+
+        )
+        return ConversationHandler.END
 
 
 class YouTubeAudioDownloader(YouTubeDownloader):
@@ -62,11 +71,16 @@ class YouTubeAudioDownloader(YouTubeDownloader):
             # due to pytube bug, rename the file to be .mp3 file
             os.rename(self._path, new_file)
             self._path = new_file
-            return open(self._path, 'rb')
+            return self
         except Exception as e:
             logger.error(
                 f'Could not download youtube audio {self._youtube.watch_url}. Error:\n{e}')
             raise e
 
-    def send(self):
-        pass
+    def send(self, update: Update) -> int:
+        self._telegram_service.bot.send_audio(
+            chat_id=self._telegram_service.get_chat_id(update),
+            audio=open(self._path, 'rb'),  # type: ignore
+            reply_to_message_id=self._telegram_service.get_message_id(update)
+        )
+        return ConversationHandler.END
