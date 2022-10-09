@@ -53,6 +53,13 @@ class TelegramService:
             update, reply_to_message_id=True
         ).reply_text(text=text, parse_mode=parse_mode, reply_markup=reply_markup)
 
+    def edit_message(self, update: Update, text: str):
+        return self.bot.edit_message_text(
+            text=text,
+            chat_id=self.get_chat_id(update),
+            message_id=self.get_message_id(update)
+        )
+
     def get_message_data(self, update: Update) -> str:
         if callback_query := self.get_callback_query(update):
             return callback_query.data

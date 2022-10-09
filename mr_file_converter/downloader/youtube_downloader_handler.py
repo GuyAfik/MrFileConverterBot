@@ -1,7 +1,7 @@
 from telegram.ext import (CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler)
 
-from mr_file_convertor.downloader.youtube_downloader_service import \
+from mr_file_converter.downloader.youtube_downloader_service import \
     YoutubeDownloaderService
 
 
@@ -19,7 +19,7 @@ class YoutubeDownloaderHandlers:
             states={
                 self.youtube_downloader_service.check_youtube_url_stage: [
                     MessageHandler(
-                        Filters.text, self.youtube_downloader_service.check_youtube_url_stage
+                        Filters.text, self.youtube_downloader_service.check_youtube_url
                     )
                 ],
                 self.youtube_downloader_service.download_stage: [
@@ -33,5 +33,7 @@ class YoutubeDownloaderHandlers:
                 ),
                 CommandHandler(
                     "cancel", callback=self.youtube_downloader_service.telegram_service.cancel)
-            ]
+            ],
+            run_async=True,
+            allow_reentry=True
         )
