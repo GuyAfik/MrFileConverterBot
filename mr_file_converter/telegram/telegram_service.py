@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Union
 
 from telegram import (Bot, CallbackQuery, InlineKeyboardButton,
                       InlineKeyboardMarkup, Message, ReplyMarkup, Update)
@@ -7,6 +7,10 @@ from telegram.utils.types import ODVInput
 
 
 class TelegramService:
+    """
+    This service is responsible for the communication with the telegram bot api as well as to provide any telegram
+    object that can be utilized in other services.
+    """
     def __init__(self, updater: Updater | None = None, bot: Bot | None = None):
         self.bot = bot or updater.bot  # type: ignore
 
@@ -19,15 +23,19 @@ class TelegramService:
             return callback_query.message
 
         if reply_to_message_id:
-            return update.effective_message.reply_to_message
+            return update.effective_message.reply_to_message or update.message.reply_to_message
 
-        return update.effective_message
+        return update.effective_message or update.message
 
     def get_message_id(self, update: Update, reply_to_message_id: bool = False) -> int:
         return self.get_message(update, reply_to_message_id).message_id
 
     def get_chat_id(self, update: Update, reply_to_message_id: bool = False) -> int:
         return self.get_message(update, reply_to_message_id).chat_id
+
+    def get_user_first_and_last_name(self, update: Update) -> Tuple[str, str]:
+        message = self.get_message(update)
+        return message.from_user.first_name, message.from_user.last_name
 
     @staticmethod
     def get_inline_keyboard(buttons: List[str]) -> InlineKeyboardMarkup:
@@ -49,11 +57,14 @@ class TelegramService:
     def reply_to_message(
         self, update: Update, text: str, parse_mode: ODVInput[str] = None, reply_markup: ReplyMarkup = None
     ) -> Message:
-        return self.get_message(
-            update, reply_to_message_id=True
-        ).reply_text(text=text, parse_mode=parse_mode, reply_markup=reply_markup)
+        return self.get_message(update).reply_text(
+            text=text,
+            parse_mode=parse_mode,
+            reply_markup=reply_markup,
+            reply_to_message_id=self.get_message_id(update)
+        )
 
-    def edit_message(self, update: Update, text: str):
+    def edit_message(self, update: Update, text: str) -> Union[Message, bool]:
         return self.bot.edit_message_text(
             text=text,
             chat_id=self.get_chat_id(update),
@@ -65,12 +76,3 @@ class TelegramService:
             return callback_query.data
         return self.get_message(update).text
 
-    def cancel(self, update: Update, context: CallbackContext):
-        return self.help(update, context)
-
-    def help(self, update: Update, context: CallbackContext):
-        first_name = context.bot.first_name
-        last_name = context.bot.last_name
-        self.send_message(
-            update, text=f'Hi, {first_name} {last_name}, show here the help command...')
-        return ConversationHandler.END

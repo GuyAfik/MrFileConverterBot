@@ -8,6 +8,7 @@ from mr_file_converter.downloader.youtube_downloader_handler import \
 from mr_file_converter.downloader.youtube_downloader_service import \
     YoutubeDownloaderService
 from mr_file_converter.telegram.telegram_service import TelegramService
+from mr_file_converter.command.command_service import CommandService
 
 
 class Core(containers.DeclarativeContainer):
@@ -21,8 +22,9 @@ class Core(containers.DeclarativeContainer):
 class Services(containers.DeclarativeContainer):
     core = providers.DependenciesContainer()
     telegram = providers.Factory(TelegramService, updater=core.updater)
+    command = providers.Factory(CommandService, telegram_service=telegram)
     youtube_downloader = providers.Factory(
-        YoutubeDownloaderService, telegram_service=telegram)
+        YoutubeDownloaderService, telegram_service=telegram, command_service=command)
 
 
 class Handlers(containers.DeclarativeContainer):
