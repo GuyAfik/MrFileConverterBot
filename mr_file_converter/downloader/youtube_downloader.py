@@ -6,7 +6,7 @@ from pytube import YouTube
 from telegram import Update
 from telegram.ext import ConversationHandler
 
-from mr_file_convertor.telegram.telegram_service import TelegramService
+from mr_file_converter.telegram.telegram_service import TelegramService
 
 logger = logging.getLogger(__name__)
 

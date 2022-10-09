@@ -4,9 +4,9 @@ from pytube import YouTube
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from mr_file_convertor.downloader.youtube_downloader import (
+from mr_file_converter.downloader.youtube_downloader import (
     YouTubeAudioDownloader, YouTubeDownloader, YouTubeVideoDownloader)
-from mr_file_convertor.telegram.telegram_service import TelegramService
+from mr_file_converter.telegram.telegram_service import TelegramService
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +19,8 @@ class YoutubeDownloaderService:
         self.telegram_service = telegram_service
 
     def ask_youtube_url(self, update: Update, context: CallbackContext):
-        first_name = context.bot.first_name
-        last_name = context.bot.last_name
         self.telegram_service.send_message(
-            update, text=f'Hi {first_name} {last_name}, Please enter the youtube URL')
+            update, text=f'Please enter the youtube URL')
         return self.check_youtube_url_stage
 
     def check_youtube_url(self, update: Update, context: CallbackContext):
@@ -41,13 +39,18 @@ class YoutubeDownloaderService:
         self.telegram_service.send_message(
             update,
             text='Please choose in which format would you like to get the youtube video?',
-            reply_markup=self.telegram_service.get_inline_keyboard(buttons=[
-                                                                   'mp3', 'mp4'])
+            reply_markup=self.telegram_service.get_inline_keyboard(
+                buttons=['mp3', 'mp4']
+            )
         )
         return self.download_stage
 
     def download_video(self, update: Update, context: CallbackContext):
         _type = self.telegram_service.get_message_data(update)
+        self.telegram_service.edit_message(
+            update, text=f'Please hang on while I am bring to you the video in {_type} format...🤔'
+        )
+
         with self.youtube_downloader_factory(context, _type) as youtube_downloader:
             return youtube_downloader.send(update)
 
