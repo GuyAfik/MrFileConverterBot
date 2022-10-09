@@ -29,10 +29,10 @@ class YoutubeDownloaderHandlers:
             },
             fallbacks=[
                 MessageHandler(
-                    filters=Filters.regex('^exit$'), callback=self.youtube_downloader_service.telegram_service.cancel
+                    filters=Filters.regex('^exit$'), callback=self.youtube_downloader_service.command_service.help
                 ),
                 CommandHandler(
-                    "cancel", callback=self.youtube_downloader_service.telegram_service.cancel)
+                    "cancel", callback=self.youtube_downloader_service.command_service.cancel)
             ],
             run_async=True,
             allow_reentry=True

@@ -4,6 +4,7 @@ from pytube import YouTube
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.downloader.youtube_downloader import (
     YouTubeAudioDownloader, YouTubeDownloader, YouTubeVideoDownloader)
 from mr_file_converter.telegram.telegram_service import TelegramService
@@ -15,8 +16,9 @@ class YoutubeDownloaderService:
 
     check_youtube_url_stage, download_stage = range(2)
 
-    def __init__(self, telegram_service: TelegramService):
+    def __init__(self, telegram_service: TelegramService, command_service: CommandService):
         self.telegram_service = telegram_service
+        self.command_service = command_service
 
     def ask_youtube_url(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
