@@ -1,10 +1,10 @@
 import logging
-from typing import Any
 from pathlib import Path
+from typing import Any
+
 from ruamel.yaml import YAML
 
 from mr_file_converter.converters.base_converter import BaseConverter
-
 
 logger = logging.getLogger(__name__)
 
@@ -26,5 +26,6 @@ class RueamelYamlConverter(BaseConverter):
             with open(file_path, 'w') as file:
                 self.yml.dump(data, file)
         except ValueError as e:
-            logger.error(f'Failed to write {data} into YAML file {file_path}, error: {e}')
+            logger.error(
+                f'Failed to write {data} into YAML file {file_path}, error: {e}')
             raise e

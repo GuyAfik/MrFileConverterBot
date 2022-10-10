@@ -15,6 +15,7 @@ ujson = "*"
 pytest = "*"
 pytest-mock = "*"
 pre-commit = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.10"

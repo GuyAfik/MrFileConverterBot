@@ -26,3 +26,4 @@ repos:
     rev: v0.982
     hooks:
     -   id: mypy
+        exclude: ./mr_file_converter

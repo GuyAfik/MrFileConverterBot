@@ -1,8 +1,9 @@
 import logging
 from typing import Any
-import ujson
-from mr_file_converter.converters.base_converter import BaseConverter
 
+import ujson  # type: ignore
+
+from mr_file_converter.converters.base_converter import BaseConverter
 
 logger = logging.getLogger(__name__)
 
@@ -25,5 +26,6 @@ class UJsonConverter(BaseConverter):
             with open(file_path, 'w') as file:
                 ujson.dump(data, file)
         except ValueError as e:
-            logger.error(f'Failed to write {data} into JSON file {file_path}, error: {e}')
+            logger.error(
+                f'Failed to write {data} into JSON file {file_path}, error: {e}')
             raise e

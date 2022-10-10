@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, IO
+from typing import IO, List, Tuple, Union
 
 from telegram import (Bot, CallbackQuery, InlineKeyboardButton,
                       InlineKeyboardMarkup, Message, ReplyMarkup, Update)
