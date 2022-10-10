@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, IO
 
 from telegram import (Bot, CallbackQuery, InlineKeyboardButton,
                       InlineKeyboardMarkup, Message, ReplyMarkup, Update)
@@ -76,3 +76,6 @@ class TelegramService:
         if callback_query := self.get_callback_query(update):
             return callback_query.data
         return self.get_message(update).text
+
+    def get_file(self, update: Update, context: CallbackContext) -> Union[str, IO]:
+        return context.bot.get_file(file_id=self.get_message(update).document).download()

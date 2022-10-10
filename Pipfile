@@ -7,6 +7,9 @@ name = "pypi"
 python-telegram-bot = "*"
 pytube = "*"
 dependency-injector = "*"
+python-magic = "*"
+ujson = "*"
+"ruamel.yaml" = "*"
 
 [dev-packages]
 pytest = "*"
