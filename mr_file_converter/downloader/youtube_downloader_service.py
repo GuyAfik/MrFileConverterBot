@@ -48,12 +48,12 @@ class YoutubeDownloaderService:
         return self.download_stage
 
     def download_video(self, update: Update, context: CallbackContext):
-        _type = self.telegram_service.get_message_data(update)
+        _format = self.telegram_service.get_message_data(update)
         self.telegram_service.edit_message(
-            update, text=f'Please hang on while I am bring to you the video in {_type} format...🤔'
+            update, text=f'Please hang on while I am bring to you the video in {_format} format...🤔'
         )
 
-        with self.youtube_downloader_factory(context, _type) as youtube_downloader:
+        with self.youtube_downloader_factory(context, _format) as youtube_downloader:
             return youtube_downloader.send(update)
 
     def youtube_downloader_factory(self, context: CallbackContext, _type: str) -> YouTubeDownloader:
