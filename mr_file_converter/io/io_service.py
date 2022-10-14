@@ -73,3 +73,8 @@ class IOService:
                 yield out_path
         finally:
             pass
+
+    @staticmethod
+    def write_data_to_file(data: str, file_path: str, mode='w'):
+        with open(file_path, mode) as file:
+            file.write(data)

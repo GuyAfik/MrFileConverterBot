@@ -1,4 +1,5 @@
 import logging
+import io
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,14 @@ class RueamelYamlConverter(BaseConverter):
 
     def __init__(self):
         self.yml = YAML()
+
+    def loads(self, data: str) -> object:
+        return self.yml.load(data)
+
+    def dumps(self, obj: object) -> str:
+        buf = io.StringIO()
+        self.yml.dump(obj, buf)
+        return buf.getvalue()
 
     def read(self, file_path: str):
         try:
