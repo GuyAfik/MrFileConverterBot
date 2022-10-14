@@ -49,11 +49,10 @@ class YouTubeVideoDownloader(YouTubeDownloader):
             raise e
 
     def send(self, update: Update) -> int:
-        self._telegram_service.bot.send_video(
-            chat_id=self._telegram_service.get_chat_id(update),
-            video=open(self._path, 'rb'),  # type: ignore
+        self._telegram_service.send_video(
+            update=update,
+            video_file_path=self._path,  # type: ignore
             reply_to_message_id=self._telegram_service.get_message_id(update)
-
         )
         return ConversationHandler.END
 
@@ -67,7 +66,7 @@ class YouTubeAudioDownloader(YouTubeDownloader):
         try:
             self._path = self._youtube.streams.get_audio_only().download()
             base, _ = os.path.splitext(self._path)
-            new_file = base + '.mp3'
+            new_file = f'{base}.mp3'
             # due to pytube bug, rename the file to be .mp3 file
             os.rename(self._path, new_file)
             self._path = new_file
@@ -78,9 +77,9 @@ class YouTubeAudioDownloader(YouTubeDownloader):
             raise e
 
     def send(self, update: Update) -> int:
-        self._telegram_service.bot.send_audio(
-            chat_id=self._telegram_service.get_chat_id(update),
-            audio=open(self._path, 'rb'),  # type: ignore
+        self._telegram_service.send_audio(
+            update=update,
+            audio_file_path=self._path,  # type: ignore
             reply_to_message_id=self._telegram_service.get_message_id(update)
         )
         return ConversationHandler.END

@@ -80,6 +80,22 @@ class TelegramService:
     def get_file(self, update: Update, context: CallbackContext) -> Union[str, IO]:
         return context.bot.get_file(file_id=self.get_message(update).document).download()
 
-    def send_file(self, update: Update, document_path: str):
-        self.bot.send_document(chat_id=self.get_chat_id(
-            update), document=open(document_path, 'rb'))
+    def send_file(self, update: Update, document_path: str) -> Message:
+        return self.bot.send_document(
+            chat_id=self.get_chat_id(update),
+            document=open(document_path, 'rb')
+        )
+
+    def send_audio(self, update: Update, audio_file_path: str, reply_to_message_id: int | None = None) -> Message:
+        return self.bot.send_audio(
+            chat_id=self.get_chat_id(update),
+            audio=open(audio_file_path, 'rb'),  # type: ignore
+            reply_to_message_id=reply_to_message_id
+        )
+
+    def send_video(self, update: Update, video_file_path: str, reply_to_message_id: int | None = None) -> Message:
+        return self.bot.send_video(
+            chat_id=self.get_chat_id(update),
+            video=open(video_file_path, 'rb'),  # type: ignore
+            reply_to_message_id=reply_to_message_id
+        )
