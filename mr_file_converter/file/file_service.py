@@ -20,8 +20,8 @@ class FileService:
     check_file_type_stage, covert_file_stage = range(2)
 
     equivalent_file_formats = {
-        'application/json': ['yml'],
-        'application/yml': ['json']
+        'application/json': ['yml', 'text'],
+        'application/yml': ['json', 'text']
     }
 
     def __init__(
@@ -78,7 +78,8 @@ class FileService:
                 source_file_type, _requested_format
             )(source_file_path) as destination_file_path:
                 self.telegram_service.send_file(
-                    update, document_path=destination_file_path)
+                    update, document_path=destination_file_path
+                )
         except Exception as e:
             raise e
         finally:
@@ -88,6 +89,10 @@ class FileService:
         if source_file_type == 'application/yml':
             if _requested_format == 'json':
                 return self.yaml_service.to_json
+            elif _requested_format == 'text':
+                return self.yaml_service.to_string
         elif source_file_type == 'application/json':
             if _requested_format == 'yml':
                 return self.json_service.to_yml
+            elif _requested_format == 'text':
+                return self.json_service.to_string

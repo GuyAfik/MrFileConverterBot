@@ -13,6 +13,12 @@ class UJsonConverter(BaseConverter):
     def __init__(self):
         self.json = ujson
 
+    def loads(self, data: str) -> object:
+        return self.json.loads(data)
+
+    def dumps(self, obj: object) -> str:
+        return self.json.dumps(obj)
+
     def read(self, file_path: str):
         try:
             with open(file_path) as file:
