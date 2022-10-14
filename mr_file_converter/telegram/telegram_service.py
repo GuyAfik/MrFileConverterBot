@@ -79,3 +79,7 @@ class TelegramService:
 
     def get_file(self, update: Update, context: CallbackContext) -> Union[str, IO]:
         return context.bot.get_file(file_id=self.get_message(update).document).download()
+
+    def send_file(self, update: Update, document_path: str):
+        self.bot.send_document(chat_id=self.get_chat_id(
+            update), document=open(document_path, 'rb'))

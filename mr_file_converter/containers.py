@@ -9,7 +9,9 @@ from mr_file_converter.downloader.youtube_downloader_handler import \
     YoutubeDownloaderHandlers
 from mr_file_converter.downloader.youtube_downloader_service import \
     YoutubeDownloaderService
+from mr_file_converter.file.file_handler import FileHandlers
 from mr_file_converter.file.file_service import FileService
+from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
 from mr_file_converter.yaml.yaml_service import YamlService
@@ -34,14 +36,20 @@ class Services(containers.DeclarativeContainer):
     json_converter = providers.Factory(JsonConverter)
     yaml_converter = providers.Factory(YamlConverter)
 
+    io = providers.Factory(IOService)
     json = providers.Factory(
-        JsonService, command_service=command, json_converter=json_converter, yaml_converter=yaml_converter
+        JsonService, command_service=command, io_service=io, json_converter=json_converter, yml_converter=yaml_converter
     )
     yaml = providers.Factory(
-        YamlService, command_service=command, json_converter=json_converter, yaml_converter=yaml_converter
+        YamlService, command_service=command, io_service=io, json_converter=json_converter, yml_converter=yaml_converter
     )
     file = providers.Factory(
-        FileService, telegram_service=telegram, json_service=json, yaml_service=yaml
+        FileService,
+        telegram_service=telegram,
+        io_service=io,
+        command_service=command,
+        json_service=json,
+        yaml_service=yaml
     )
 
 
@@ -50,6 +58,9 @@ class Handlers(containers.DeclarativeContainer):
     services = providers.DependenciesContainer()
     youtube_downloader = providers.Factory(
         YoutubeDownloaderHandlers, youtube_downloader_service=services.youtube_downloader
+    )
+    file = providers.Factory(
+        FileHandlers, file_service=services.file
     )
 
 
