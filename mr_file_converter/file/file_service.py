@@ -60,7 +60,11 @@ class FileService:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
-        if file_type == 'text/plain' and (file_path.endswith('yml') or file_path.endswith('yaml')):
+
+        if file_type == 'text/plain' and (
+            file_path.endswith('yml') or  # type: ignore
+            file_path.endswith('yaml')  # type: ignore
+        ):
             file_type = 'application/yml'
         return file_type
 
@@ -80,7 +84,7 @@ class FileService:
         finally:
             self.io_service.remove_file(source_file_path)
 
-    def get_service(self, source_file_type, _requested_format) -> Callable:
+    def get_service(self, source_file_type, _requested_format) -> Callable:  # type: ignore
         if source_file_type == 'application/yml':
             if _requested_format == 'json':
                 return self.yaml_service.to_json
