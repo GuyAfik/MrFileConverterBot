@@ -44,7 +44,8 @@ class JsonService:
             prefix=os.path.splitext(source_file_path)[0]
         ) as destination_file_path:
             self.io_service.write_data_to_file(
-                data=self.json_converter.dumps(self.json_converter.read(source_file_path)),
+                data=self.json_converter.dumps(
+                    self.json_converter.read(source_file_path)),
                 file_path=destination_file_path
             )
             yield destination_file_path

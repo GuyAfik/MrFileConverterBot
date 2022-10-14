@@ -44,7 +44,8 @@ class YamlService:
                 prefix=os.path.splitext(source_file_path)[0]
         ) as destination_file_path:
             self.io_service.write_data_to_file(
-                data=self.yml_converter.dumps(self.yml_converter.read(source_file_path)),
+                data=self.yml_converter.dumps(
+                    self.yml_converter.read(source_file_path)),
                 file_path=destination_file_path
             )
             yield destination_file_path
