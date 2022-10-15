@@ -31,27 +31,27 @@ class JsonService:
         """
         with self.io_service.create_temp_yml_file(
             prefix=custom_file_name or os.path.splitext(source_file_path)[0]
-        ) as destination_file_path:
+        ) as yml_file:
             self.yml_converter.write(
                 data=self.json_converter.read(source_file_path),
-                file_path=destination_file_path
+                file_path=yml_file
             )
-            yield destination_file_path
+            yield yml_file
 
     @contextmanager
-    def to_string(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_text(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
         """
         Converts json to a file that is a string representation of the json.
         """
         with self.io_service.create_temp_txt_file(
             prefix=custom_file_name or os.path.splitext(source_file_path)[0]
-        ) as destination_file_path:
+        ) as text_file:
             self.io_service.write_data_to_file(
                 data=self.json_converter.dumps(
                     self.json_converter.read(source_file_path)),
-                file_path=destination_file_path
+                file_path=text_file
             )
-            yield destination_file_path
+            yield text_file
 
     @contextmanager
     def to_xml(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
