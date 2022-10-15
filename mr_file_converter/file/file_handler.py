@@ -20,9 +20,15 @@ class FileHandlers:
                         Filters.document, self.file_service.check_file_type
                     )
                 ],
-                self.file_service.covert_file_stage: [
+                self.file_service.ask_custom_file_name_stage: [
                     CallbackQueryHandler(
-                        callback=self.file_service.convert_file)
+                        callback=self.file_service.ask_custom_file_name
+                    )
+                ],
+                self.file_service.convert_file_stage: [
+                    MessageHandler(
+                        Filters.text, self.file_service.convert_file
+                    )
                 ]
             },
             fallbacks=[
