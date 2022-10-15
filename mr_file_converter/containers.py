@@ -25,8 +25,14 @@ class Core(containers.DeclarativeContainer):
     )
 
 
+class Converters(containers.DeclarativeContainer):
+    json = providers.Factory(JsonConverter)
+    yaml = providers.Factory(YamlConverter)
+
+
 class Services(containers.DeclarativeContainer):
     core = providers.DependenciesContainer()
+    converters = providers.DependenciesContainer()
     telegram = providers.Factory(TelegramService, updater=core.updater)
     io = providers.Factory(IOService)
     command = providers.Factory(
@@ -34,15 +40,19 @@ class Services(containers.DeclarativeContainer):
     youtube_downloader = providers.Factory(
         YoutubeDownloaderService, telegram_service=telegram, command_service=command)
 
-    # converters
-    json_converter = providers.Factory(JsonConverter)
-    yaml_converter = providers.Factory(YamlConverter)
-
     json = providers.Factory(
-        JsonService, command_service=command, io_service=io, json_converter=json_converter, yml_converter=yaml_converter
+        JsonService,
+        command_service=command,
+        io_service=io,
+        json_converter=converters.json,
+        yml_converter=converters.yaml
     )
     yaml = providers.Factory(
-        YamlService, command_service=command, io_service=io, json_converter=json_converter, yml_converter=yaml_converter
+        YamlService,
+        command_service=command,
+        io_service=io,
+        json_converter=converters.json,
+        yml_converter=converters.yaml
     )
     file = providers.Factory(
         FileService,
@@ -67,5 +77,6 @@ class Handlers(containers.DeclarativeContainer):
 
 class Application(containers.DeclarativeContainer):
     core = providers.Container(Core)
-    services = providers.Container(Services, core=core)
+    converters = providers.Container(Converters)
+    services = providers.Container(Services, core=core, converters=converters)
     handlers = providers.Container(Handlers, services=services)
