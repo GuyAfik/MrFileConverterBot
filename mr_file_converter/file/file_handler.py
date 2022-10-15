@@ -33,7 +33,7 @@ class FileHandlers:
             },
             fallbacks=[
                 MessageHandler(
-                    filters=Filters.regex('^exit$'), callback=self.file_service.command_service.help
+                    filters=Filters.regex('^exit$'), callback=self.file_service.command_service.cancel
                 ),
                 CommandHandler(
                     "cancel", callback=self.file_service.command_service.cancel)
