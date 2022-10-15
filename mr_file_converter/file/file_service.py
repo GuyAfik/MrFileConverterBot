@@ -3,7 +3,7 @@ from typing import Callable
 
 from magic import from_file
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.io.io_service import IOService
@@ -21,6 +21,8 @@ class FileService:
         ask_custom_file_name_stage,
         convert_file_stage
     ) = range(3)
+
+    supported_file_formats = {'json, yml'}
 
     equivalent_file_formats = {
         'application/json': ['yml', 'text'],
@@ -46,7 +48,7 @@ class FileService:
             update=update, text='Please add here a file you would like to convert.')
         return self.check_file_type_stage
 
-    def get_file_type(self, update: Update, context: CallbackContext):
+    def get_file_type(self, update: Update, context: CallbackContext) -> str | None:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
@@ -56,21 +58,30 @@ class FileService:
             file_path.endswith('yaml')  # type: ignore
         ):
             file_type = 'application/yml'
+        else:
+            file_type = None
         return file_type
 
     def check_file_type(self, update: Update, context: CallbackContext):
-        file_type = self.get_file_type(update, context)
-        context.user_data['source_file_type'] = file_type
-        equivalent_types = self.equivalent_file_formats.get(file_type, [])
-        self.telegram_service.reply_to_message(
-            update,
-            text=f'The type of the file is {file_type}, It can be converted to the following types, '
-                 f'please choose one of the types to convert into.',
-            reply_markup=self.telegram_service.get_inline_keyboard(
-                buttons=equivalent_types
+        if file_type := self.get_file_type(update, context):
+            context.user_data['source_file_type'] = file_type
+            equivalent_types = self.equivalent_file_formats.get(file_type, [])
+            self.telegram_service.reply_to_message(
+                update=update,
+                text=f'The type of the file is {file_type}, It can be converted to the following types, '
+                     f'please choose one of the types to convert into.',
+                reply_markup=self.telegram_service.get_inline_keyboard(
+                    buttons=equivalent_types
+                )
             )
+            return self.ask_custom_file_name_stage
+
+        # file type is not supported
+        self.telegram_service.reply_to_message(
+            update=update,
+            text=f'The file is not supported, supported file formats are:\n{", ".join(self.supported_file_formats)}'
         )
-        return self.ask_custom_file_name_stage
+        return ConversationHandler.END
 
     def ask_custom_file_name(self, update: Update, context: CallbackContext):
 
