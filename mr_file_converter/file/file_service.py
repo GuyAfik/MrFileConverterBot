@@ -56,6 +56,9 @@ class FileService:
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
 
+        if file_type in self.equivalent_file_formats:
+            return file_type
+
         if file_type == 'text/plain' and (
             file_path.endswith('yml') or  # type: ignore
             file_path.endswith('yaml')  # type: ignore
