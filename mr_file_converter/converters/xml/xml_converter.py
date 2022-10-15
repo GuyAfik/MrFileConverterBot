@@ -14,7 +14,8 @@ class XMLConverter(BaseConverter):
     def read(self, file_path: str):
         try:
             with open(file_path, 'r') as xml_file:
-                return xmltodict.parse(xml_input=xml_file)
+                xml_input = xml_file.read().strip().replace('\n', '').replace('\r', '')
+                return xmltodict.parse(xml_input=xml_input)
         except Exception as e:
             logger.error(f'failed to read XML file {file_path}, error:\n{e}')
             raise e

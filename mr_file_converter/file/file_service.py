@@ -10,6 +10,7 @@ from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
 from mr_file_converter.yaml.yaml_service import YamlService
+from mr_file_converter.xml.xml_service import XMLService
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,8 @@ class FileService:
 
     equivalent_file_formats = {
         'application/json': ['yml', 'text', 'xml'],
-        'application/yml': ['json', 'text', 'xml']
+        'application/yml': ['json', 'text', 'xml'],
+        'application/xml': ['json', 'yml']
     }
 
     def __init__(
@@ -37,13 +39,15 @@ class FileService:
         io_service: IOService,
         command_service: CommandService,
         json_service: JsonService,
-        yaml_service: YamlService
+        yaml_service: YamlService,
+        xml_service: XMLService
     ):
         self.telegram_service = telegram_service
         self.io_service = io_service
         self.command_service = command_service
         self.json_service = json_service
         self.yaml_service = yaml_service
+        self.xml_service = xml_service
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -54,6 +58,8 @@ class FileService:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
+        print(file_type)
+        print(from_file(file_path))
 
         if file_type in self.equivalent_file_formats:
             return file_type
@@ -63,6 +69,8 @@ class FileService:
             file_path.endswith('yaml')  # type: ignore
         ):
             file_type = 'application/yml'
+        elif file_type == 'text/xml' and file_path.endswith('xml'):  # type: ignore
+            file_type = 'application/xml'
         else:
             file_type = None
         return file_type
@@ -134,3 +142,8 @@ class FileService:
                 return self.json_service.to_text
             elif _requested_format == 'xml':
                 return self.json_service.to_xml
+        elif source_file_type == 'application/xml':
+            if _requested_format == 'yml':
+                return self.xml_service.to_yml
+            elif _requested_format == 'json':
+                return self.xml_service.to_json

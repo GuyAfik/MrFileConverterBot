@@ -16,6 +16,7 @@ from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
 from mr_file_converter.yaml.yaml_service import YamlService
+from mr_file_converter.xml.xml_service import XMLService
 
 
 class Core(containers.DeclarativeContainer):
@@ -58,13 +59,22 @@ class Services(containers.DeclarativeContainer):
         yml_converter=converters.yaml,
         xml_converter=converters.xml
     )
+    xml = providers.Factory(
+        XMLService,
+        command_service=command,
+        io_service=io,
+        json_converter=converters.json,
+        yml_converter=converters.yaml,
+        xml_converter=converters.xml
+    )
     file = providers.Factory(
         FileService,
         telegram_service=telegram,
         io_service=io,
         command_service=command,
         json_service=json,
-        yaml_service=yaml
+        yaml_service=yaml,
+        xml_service=xml
     )
 
 
