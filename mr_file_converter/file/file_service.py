@@ -27,8 +27,8 @@ class FileService:
     supported_file_formats = {'json, yml'}
 
     equivalent_file_formats = {
-        'application/json': ['yml', 'text'],
-        'application/yml': ['json', 'text']
+        'application/json': ['yml', 'text', 'xml'],
+        'application/yml': ['json', 'text', 'xml']
     }
 
     def __init__(
@@ -125,8 +125,12 @@ class FileService:
                 return self.yaml_service.to_json
             elif _requested_format == 'text':
                 return self.yaml_service.to_string
+            elif _requested_format == 'xml':
+                return self.yaml_service.to_xml
         elif source_file_type == 'application/json':
             if _requested_format == 'yml':
                 return self.json_service.to_yml
             elif _requested_format == 'text':
                 return self.json_service.to_string
+            elif _requested_format == 'xml':
+                return self.json_service.to_xml
