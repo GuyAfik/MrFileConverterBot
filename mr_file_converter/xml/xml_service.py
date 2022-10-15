@@ -1,6 +1,7 @@
 from mr_file_converter.command.command_service import CommandService
+from mr_file_converter.converters import (JsonConverter, XMLConverter,
+                                          YamlConverter)
 from mr_file_converter.io.io_service import IOService
-from mr_file_converter.converters import JsonConverter, YamlConverter, XMLConverter
 
 
 class XMLService:
@@ -18,4 +19,3 @@ class XMLService:
         self.json_converter = json_converter
         self.yml_converter = yml_converter
         self.xml_converter = xml_converter
-

@@ -4,7 +4,8 @@ from dependency_injector import containers, providers
 from telegram.ext import Updater
 
 from mr_file_converter.command.command_service import CommandService
-from mr_file_converter.converters import JsonConverter, YamlConverter, XMLConverter
+from mr_file_converter.converters import (JsonConverter, XMLConverter,
+                                          YamlConverter)
 from mr_file_converter.downloader.youtube_downloader_handler import \
     YoutubeDownloaderHandlers
 from mr_file_converter.downloader.youtube_downloader_service import \

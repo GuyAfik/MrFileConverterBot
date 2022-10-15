@@ -3,7 +3,8 @@ from contextlib import contextmanager
 from typing import Generator
 
 from mr_file_converter.command.command_service import CommandService
-from mr_file_converter.converters import JsonConverter, YamlConverter, XMLConverter
+from mr_file_converter.converters import (JsonConverter, XMLConverter,
+                                          YamlConverter)
 from mr_file_converter.io.io_service import IOService
 
 
@@ -54,7 +55,9 @@ class JsonService:
 
     @contextmanager
     def to_xml(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
-        with self.io_service.create_temp_xml_file(prefix=custom_file_name) as xml_file:
+        with self.io_service.create_temp_xml_file(
+            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+        ) as xml_file:
             self.xml_converter.write(
                 data=self.json_converter.read(source_file_path),
                 file_path=xml_file
