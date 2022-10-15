@@ -5,7 +5,7 @@ from typing import Any
 class BaseConverter(ABC):
 
     @abstractmethod
-    def read(self, file_path: str):
+    def read(self, file_path: str, **kwargs):
         pass
 
     @abstractmethod

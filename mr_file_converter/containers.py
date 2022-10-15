@@ -4,7 +4,7 @@ from dependency_injector import containers, providers
 from telegram.ext import Updater
 
 from mr_file_converter.command.command_service import CommandService
-from mr_file_converter.converters import JsonConverter, YamlConverter
+from mr_file_converter.converters import JsonConverter, YamlConverter, XMLConverter
 from mr_file_converter.downloader.youtube_downloader_handler import \
     YoutubeDownloaderHandlers
 from mr_file_converter.downloader.youtube_downloader_service import \
@@ -28,6 +28,7 @@ class Core(containers.DeclarativeContainer):
 class Converters(containers.DeclarativeContainer):
     json = providers.Factory(JsonConverter)
     yaml = providers.Factory(YamlConverter)
+    xml = providers.Factory(XMLConverter)
 
 
 class Services(containers.DeclarativeContainer):
@@ -45,14 +46,16 @@ class Services(containers.DeclarativeContainer):
         command_service=command,
         io_service=io,
         json_converter=converters.json,
-        yml_converter=converters.yaml
+        yml_converter=converters.yaml,
+        xml_converter=converters.xml
     )
     yaml = providers.Factory(
         YamlService,
         command_service=command,
         io_service=io,
         json_converter=converters.json,
-        yml_converter=converters.yaml
+        yml_converter=converters.yaml,
+        xml_converter=converters.xml
     )
     file = providers.Factory(
         FileService,
