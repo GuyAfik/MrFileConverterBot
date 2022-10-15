@@ -22,12 +22,12 @@ class YamlService:
         self.yml_converter = yml_converter
 
     @contextmanager
-    def to_json(self, source_file_path: str) -> Generator[str, None, None]:
+    def to_json(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
         """
         Converts json to yml file.
         """
         with self.io_service.create_temp_json_file(
-            prefix=os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
         ) as destination_file_path:
             self.json_converter.write(
                 data=self.yml_converter.read(source_file_path),
@@ -36,12 +36,12 @@ class YamlService:
             yield destination_file_path
 
     @contextmanager
-    def to_string(self, source_file_path: str) -> Generator[str, None, None]:
+    def to_string(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
         """
         Converts yml to a file that is a string representation of the yml.
         """
         with self.io_service.create_temp_txt_file(
-                prefix=os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
         ) as destination_file_path:
             self.io_service.write_data_to_file(
                 data=self.yml_converter.dumps(
