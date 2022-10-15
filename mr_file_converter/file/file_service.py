@@ -19,6 +19,12 @@ class FileService:
     """
     This service is responsible to manage all the operations related to file conversions.
     """
+    class FileTypes:
+        YML = 'yml'
+        JSON = 'json'
+        XML = 'xml'
+        TEXT = 'text'
+
     (
         check_file_type_stage,
         ask_custom_file_name_stage,
@@ -28,9 +34,9 @@ class FileService:
     supported_file_formats = {'json, yml'}
 
     equivalent_file_formats = {
-        'application/json': ['yml', 'text', 'xml'],
-        'application/yml': ['json', 'text', 'xml'],
-        'application/xml': ['json', 'yml']
+        FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
+        FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
+        FileTypes.XML: [FileTypes.JSON, FileTypes.YML]
     }
 
     def __init__(
@@ -58,8 +64,8 @@ class FileService:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
-        print(file_type)
-        print(from_file(file_path))
+
+        logger.debug(f'The type of {file_path} is {file_type}')
 
         if file_type in self.equivalent_file_formats:
             return file_type
@@ -68,11 +74,13 @@ class FileService:
             file_path.endswith('yml') or  # type: ignore
             file_path.endswith('yaml')  # type: ignore
         ):
-            file_type = 'application/yml'
+            file_type = self.FileTypes.YML
         elif file_type == 'text/xml' and (
             file_path.endswith('xml')  # type: ignore
         ):
-            file_type = 'application/xml'
+            file_type = self.FileTypes.XML
+        elif file_type == 'application/json':
+            file_type = self.FileTypes.JSON
         else:
             file_type = None
         return file_type
@@ -130,22 +138,22 @@ class FileService:
             self.io_service.remove_file(source_file_path)
 
     def get_service(self, source_file_type: str, _requested_format: str) -> Callable:  # type: ignore
-        if source_file_type == 'application/yml':
-            if _requested_format == 'json':
+        if source_file_type == self.FileTypes.YML:
+            if _requested_format == self.FileTypes.JSON:
                 return self.yaml_service.to_json
-            elif _requested_format == 'text':
+            elif _requested_format == self.FileTypes.TEXT:
                 return self.yaml_service.to_text
-            elif _requested_format == 'xml':
+            elif _requested_format == self.FileTypes.XML:
                 return self.yaml_service.to_xml
-        elif source_file_type == 'application/json':
-            if _requested_format == 'yml':
+        elif source_file_type == self.FileTypes.JSON:
+            if _requested_format == self.FileTypes.YML:
                 return self.json_service.to_yml
-            elif _requested_format == 'text':
+            elif _requested_format == self.FileTypes.TEXT:
                 return self.json_service.to_text
-            elif _requested_format == 'xml':
+            elif _requested_format == self.FileTypes.XML:
                 return self.json_service.to_xml
-        elif source_file_type == 'application/xml':
-            if _requested_format == 'yml':
+        elif source_file_type == self.FileTypes.XML:
+            if _requested_format == self.FileTypes.YML:
                 return self.xml_service.to_yml
-            elif _requested_format == 'json':
+            elif _requested_format == self.FileTypes.JSON:
                 return self.xml_service.to_json
