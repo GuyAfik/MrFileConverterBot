@@ -28,7 +28,9 @@ class Core(containers.DeclarativeContainer):
 class Services(containers.DeclarativeContainer):
     core = providers.DependenciesContainer()
     telegram = providers.Factory(TelegramService, updater=core.updater)
-    command = providers.Factory(CommandService, telegram_service=telegram)
+    io = providers.Factory(IOService)
+    command = providers.Factory(
+        CommandService, telegram_service=telegram, io_service=io)
     youtube_downloader = providers.Factory(
         YoutubeDownloaderService, telegram_service=telegram, command_service=command)
 
@@ -36,7 +38,6 @@ class Services(containers.DeclarativeContainer):
     json_converter = providers.Factory(JsonConverter)
     yaml_converter = providers.Factory(YamlConverter)
 
-    io = providers.Factory(IOService)
     json = providers.Factory(
         JsonService, command_service=command, io_service=io, json_converter=json_converter, yml_converter=yaml_converter
     )
