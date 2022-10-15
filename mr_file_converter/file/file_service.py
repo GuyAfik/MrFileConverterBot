@@ -9,8 +9,8 @@ from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
-from mr_file_converter.yaml.yaml_service import YamlService
 from mr_file_converter.xml.xml_service import XMLService
+from mr_file_converter.yaml.yaml_service import YamlService
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,9 @@ class FileService:
             file_path.endswith('yaml')  # type: ignore
         ):
             file_type = 'application/yml'
-        elif file_type == 'text/xml' and file_path.endswith('xml'):  # type: ignore
+        elif file_type == 'text/xml' and (
+            file_path.endswith('xml')  # type: ignore
+        ):
             file_type = 'application/xml'
         else:
             file_type = None

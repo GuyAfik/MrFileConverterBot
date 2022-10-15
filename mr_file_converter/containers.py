@@ -15,8 +15,8 @@ from mr_file_converter.file.file_service import FileService
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
-from mr_file_converter.yaml.yaml_service import YamlService
 from mr_file_converter.xml.xml_service import XMLService
+from mr_file_converter.yaml.yaml_service import YamlService
 
 
 class Core(containers.DeclarativeContainer):
