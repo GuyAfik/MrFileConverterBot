@@ -46,7 +46,6 @@ class Services(containers.DeclarativeContainer):
 
     json = providers.Factory(
         JsonService,
-        command_service=command,
         io_service=io,
         json_converter=converters.json,
         yml_converter=converters.yaml,
