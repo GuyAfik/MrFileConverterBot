@@ -48,7 +48,8 @@ class JsonService:
         ) as text_file:
             self.io_service.write_data_to_file(
                 data=self.json_converter.dumps(
-                    self.json_converter.read(source_file_path)),
+                    self.json_converter.read(source_file_path)
+                ),
                 file_path=text_file
             )
             yield text_file
