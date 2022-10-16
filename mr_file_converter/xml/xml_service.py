@@ -24,6 +24,12 @@ class XMLService:
         self.yml_converter = yml_converter
         self.xml_converter = xml_converter
 
+    def get_xml_file_content(self, source_file_path: str):
+        xml_file_as_dict: dict = self.xml_converter.read(source_file_path)
+        if 'root' in xml_file_as_dict and len(xml_file_as_dict.keys()) == 1:
+            xml_file_as_dict = xml_file_as_dict.pop('root')
+        return xml_file_as_dict
+
     @contextmanager
     def to_json(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
         """
@@ -33,7 +39,7 @@ class XMLService:
             prefix=custom_file_name or os.path.splitext(source_file_path)[0]
         ) as json_file:
             self.json_converter.write(
-                data=self.xml_converter.read(source_file_path),
+                data=self.get_xml_file_content(source_file_path),
                 file_path=json_file
             )
             yield json_file
@@ -47,7 +53,7 @@ class XMLService:
             prefix=custom_file_name or os.path.splitext(source_file_path)[0]
         ) as yml_file:
             self.yml_converter.write(
-                data=self.xml_converter.read(source_file_path),
+                data=self.get_xml_file_content(source_file_path),
                 file_path=yml_file
             )
             yield yml_file

@@ -23,7 +23,8 @@ class XMLConverter(BaseConverter):
     def write(self, data: Any, file_path: str):
         try:
             with open(file_path, 'w') as file:
-                file.write(dict2xml(data, indent="  "))
+                xml = '<?xml version="1.0" encoding="UTF-8" ?>'
+                file.write(f"{xml}\n{dict2xml(data, wrap='root')}")
         except Exception as e:
             logger.error(
                 f'failed to parse {file_path} to XML file, error:\n{e}')
