@@ -13,7 +13,12 @@ def html_service(
     return HTMLService(io_service=io_service)
 
 
-def test_html_to_pdf(html_service: HTMLService, base_file_path: str):
+@pytest.fixture()
+def html_test_data_base_path(base_file_path):
+    return f'{base_file_path}/html/test_data'
+
+
+def test_html_to_pdf(html_service: HTMLService, html_test_data_base_path: str):
     """
     Given:
      - test html file
@@ -27,14 +32,14 @@ def test_html_to_pdf(html_service: HTMLService, base_file_path: str):
      - make sure the name is correct
     """
     with html_service.to_pdf(
-        source_file_path=f'{base_file_path}/html/test_data/test.html',
+        source_file_path=f'{html_test_data_base_path}/test.html',
         custom_file_name='test'
     ) as pdf_file:
         assert os.path.exists(pdf_file)
         assert pdf_file == 'test.pdf'
 
 
-def test_html_to_png(html_service: HTMLService, base_file_path: str):
+def test_html_to_png(html_service: HTMLService, html_test_data_base_path: str):
     """
     Given:
      - test html file
@@ -48,7 +53,7 @@ def test_html_to_png(html_service: HTMLService, base_file_path: str):
      - make sure the name is correct
     """
     with html_service.to_png(
-        source_file_path=f'{base_file_path}/html/test_data/test.html',
+        source_file_path=f'{html_test_data_base_path}/test.html',
         custom_file_name='test'
     ) as png_file:
         assert os.path.exists(png_file)
