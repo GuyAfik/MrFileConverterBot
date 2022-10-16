@@ -67,7 +67,6 @@ class Services(containers.DeclarativeContainer):
     )
     html = providers.Factory(
         HTMLService,
-        command_service=command,
         io_service=io
     )
     file = providers.Factory(

@@ -17,10 +17,8 @@ class HTMLService:
 
     def __init__(
         self,
-        command_service: CommandService,
         io_service: IOService
     ):
-        self.command_service = command_service
         self.io_service = io_service
 
     @contextmanager
