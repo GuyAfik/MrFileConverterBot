@@ -15,5 +15,6 @@ jobs:
         uses: dschep/install-pipenv-action@v1
       - name: Run unit-tests
         run: |
+          sudo apt-get install -y wkhtmltopdf
           pipenv install --dev
           pipenv run pytest

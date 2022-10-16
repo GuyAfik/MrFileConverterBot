@@ -12,15 +12,12 @@ from mr_file_converter.io.io_service import IOService
 class HTMLService:
     """
     TODO: https://github.com/JazzCore/python-pdfkit - need to install wkhtmltopdf on the docker
-    TODO: brew install homebrew/cask/wkhtmltopdf
     """
 
     def __init__(
         self,
-        command_service: CommandService,
         io_service: IOService
     ):
-        self.command_service = command_service
         self.io_service = io_service
 
     @contextmanager
