@@ -51,7 +51,7 @@ def test_yml_to_json(yml_service: YamlService, yml_test_data_base_path: str):
         assert yml_service.json_converter.read(json_file)
 
 
-def test_yml_to_xml(yml_service: YamlService, base_file_path: str):
+def test_yml_to_xml(yml_service: YamlService, yml_test_data_base_path: str):
     """
     Given:
      - test yml file
