@@ -27,6 +27,7 @@ class FileService:
         TEXT = 'text'
         HTML = 'html'
         PDF = 'pdf'
+        PNG = 'png'
 
     (
         check_file_type_stage,
@@ -40,7 +41,7 @@ class FileService:
         FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
         FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
         FileTypes.XML: [FileTypes.JSON, FileTypes.YML],
-        FileTypes.HTML: [FileTypes.PDF]
+        FileTypes.HTML: [FileTypes.PDF, FileTypes.PNG]
     }
 
     def __init__(
@@ -168,3 +169,5 @@ class FileService:
         elif source_file_type == self.FileTypes.HTML:
             if _requested_format == self.FileTypes.PDF:
                 return self.html_service.to_pdf
+            if _requested_format == self.FileTypes.PNG:
+                return self.html_service.to_png
