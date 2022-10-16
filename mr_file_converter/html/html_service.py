@@ -38,5 +38,6 @@ class HTMLService:
         ) as png_file:
             html_to_image = Html2Image()
             html_to_image.screenshot(
-                html_file=source_file_path, save_as=png_file)
+                html_file=source_file_path, save_as=png_file
+            )
             yield png_file
