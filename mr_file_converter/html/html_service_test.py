@@ -58,3 +58,24 @@ def test_html_to_png(html_service: HTMLService, html_test_data_base_path: str):
     ) as png_file:
         assert os.path.exists(png_file)
         assert png_file == 'test.png'
+
+
+def test_html_to_jpg(html_service: HTMLService, html_test_data_base_path: str):
+    """
+    Given:
+     - test html file
+     - custom file name.
+
+    When:
+     - converting a html file into jpg file.
+
+    Then:
+     - make sure the newly created jpg file exist in the file system
+     - make sure the name is correct
+    """
+    with html_service.to_jpg(
+        source_file_path=f'{html_test_data_base_path}/test.html',
+        custom_file_name='test'
+    ) as jpg_file:
+        assert os.path.exists(jpg_file)
+        assert jpg_file == 'test.jpg'
