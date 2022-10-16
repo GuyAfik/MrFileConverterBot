@@ -1,6 +1,7 @@
 import os
 from contextlib import contextmanager
 from typing import Generator
+
 import pdfkit
 
 from mr_file_converter.command.command_service import CommandService
