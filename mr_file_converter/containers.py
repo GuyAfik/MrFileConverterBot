@@ -53,7 +53,6 @@ class Services(containers.DeclarativeContainer):
     )
     yaml = providers.Factory(
         YamlService,
-        command_service=command,
         io_service=io,
         json_converter=converters.json,
         yml_converter=converters.yaml,
