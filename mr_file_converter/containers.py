@@ -61,7 +61,6 @@ class Services(containers.DeclarativeContainer):
     )
     xml = providers.Factory(
         XMLService,
-        command_service=command,
         io_service=io,
         json_converter=converters.json,
         yml_converter=converters.yaml,

@@ -4,7 +4,7 @@ from mr_file_converter.converters import (JsonConverter, XMLConverter,
                                           YamlConverter)
 from mr_file_converter.io.io_service import IOService
 
-BASE_PATH = 'mr_file_converter/json'
+BASE_PATH = 'mr_file_converter'
 
 
 @pytest.fixture()
