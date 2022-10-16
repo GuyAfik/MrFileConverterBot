@@ -38,7 +38,7 @@ def test_json_to_yml(json_service: JsonService):
      - make sure it's possible to read the yml file after it has been converted.
     """
     with json_service.to_yml(
-        source_file_path='test_data/test.json', 
+        source_file_path='mr_file_converter/json/test_data/test.json',
         custom_file_name='test'
     ) as yml_file:
         assert os.path.exists(yml_file)
