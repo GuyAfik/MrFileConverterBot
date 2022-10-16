@@ -23,7 +23,12 @@ def yml_service(
     )
 
 
-def test_yml_to_json(yml_service: YamlService, base_file_path: str):
+@pytest.fixture()
+def yml_test_data_base_path(base_file_path):
+    return f'{base_file_path}/yaml/test_data'
+
+
+def test_yml_to_json(yml_service: YamlService, yml_test_data_base_path: str):
     """
     Given:
      - test YML file
@@ -38,7 +43,7 @@ def test_yml_to_json(yml_service: YamlService, base_file_path: str):
      - make sure it's possible to read the JSON file after it has been converted.
     """
     with yml_service.to_json(
-        source_file_path=f'{base_file_path}/yaml/test_data/test.yml',
+        source_file_path=f'{yml_test_data_base_path}/test.yml',
         custom_file_name='test'
     ) as json_file:
         assert os.path.exists(json_file)
@@ -46,7 +51,7 @@ def test_yml_to_json(yml_service: YamlService, base_file_path: str):
         assert yml_service.json_converter.read(json_file)
 
 
-def test_yml_to_xml(yml_service: YamlService, base_file_path: str):
+def test_yml_to_xml(yml_service: YamlService, yml_test_data_base_path: str):
     """
     Given:
      - test yml file
@@ -61,7 +66,7 @@ def test_yml_to_xml(yml_service: YamlService, base_file_path: str):
      - make sure it's possible to read the XML file after it has been converted.
     """
     with yml_service.to_xml(
-        source_file_path=f'{base_file_path}/yaml/test_data/test.yml',
+        source_file_path=f'{yml_test_data_base_path}/test.yml',
         custom_file_name='test'
     ) as xml_file:
         assert os.path.exists(xml_file)
@@ -69,7 +74,7 @@ def test_yml_to_xml(yml_service: YamlService, base_file_path: str):
         assert yml_service.xml_converter.read(xml_file)
 
 
-def test_yml_to_text(yml_service: YamlService, base_file_path: str):
+def test_yml_to_text(yml_service: YamlService, yml_test_data_base_path: str):
     """
     Given:
      - test YML file
@@ -83,7 +88,7 @@ def test_yml_to_text(yml_service: YamlService, base_file_path: str):
      - make sure the name is correct
     """
     with yml_service.to_text(
-        source_file_path=f'{base_file_path}/yaml/test_data/test.yml',
+        source_file_path=f'{yml_test_data_base_path}/test.yml',
         custom_file_name='test'
     ) as text_file:
         assert os.path.exists(text_file)
