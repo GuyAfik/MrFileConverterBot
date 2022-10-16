@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from typing import Generator
 
 import pdfkit
+from html2image import Html2Image
 
 from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.io.io_service import IOService
@@ -13,6 +14,7 @@ class HTMLService:
     TODO: https://github.com/JazzCore/python-pdfkit - need to install wkhtmltopdf on the docker
     TODO: brew install homebrew/cask/wkhtmltopdf
     """
+
     def __init__(
         self,
         command_service: CommandService,
@@ -28,3 +30,14 @@ class HTMLService:
         ) as pdf_file:
             pdfkit.from_file(source_file_path, pdf_file)
             yield pdf_file
+
+    @contextmanager
+    def to_png(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+        with self.io_service.create_temp_png_file(
+            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+        ) as png_file:
+            html_to_image = Html2Image()
+            html_to_image.screenshot(
+                html_file=source_file_path, save_as=png_file
+            )
+            yield png_file

@@ -13,6 +13,7 @@ ujson = "*"
 xmltodict = "*"
 dict2xml = "*"
 pdfkit = "*"
+html2image = "*"
 
 [dev-packages]
 pytest = "*"
