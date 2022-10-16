@@ -38,7 +38,7 @@ def test_json_to_yml(json_service: JsonService, base_file_path: str):
      - make sure it's possible to read the yml file after it has been converted.
     """
     with json_service.to_yml(
-        source_file_path=f'{base_file_path}/test_data/test.json',
+        source_file_path=f'{base_file_path}/json/test_data/test.json',
         custom_file_name='test'
     ) as yml_file:
         assert os.path.exists(yml_file)
@@ -61,7 +61,7 @@ def test_json_to_xml(json_service: JsonService, base_file_path: str):
      - make sure it's possible to read the XML file after it has been converted.
     """
     with json_service.to_xml(
-        source_file_path=f'{base_file_path}/test_data/test.json',
+        source_file_path=f'{base_file_path}/json/test_data/test.json',
         custom_file_name='test'
     ) as xml_file:
         assert os.path.exists(xml_file)
@@ -83,7 +83,7 @@ def test_json_to_text(json_service: JsonService, base_file_path: str):
      - make sure the name is correct
     """
     with json_service.to_text(
-        source_file_path=f'{base_file_path}/test_data/test.json',
+        source_file_path=f'{base_file_path}/json/test_data/test.json',
         custom_file_name='test'
     ) as text_file:
         assert os.path.exists(text_file)
