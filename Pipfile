@@ -12,6 +12,7 @@ ujson = "*"
 "ruamel.yaml" = "*"
 xmltodict = "*"
 dict2xml = "*"
+pdfkit = "*"
 
 [dev-packages]
 pytest = "*"

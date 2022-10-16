@@ -6,6 +6,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from mr_file_converter.command.command_service import CommandService
+from mr_file_converter.html.html_service import HTMLService
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
@@ -24,6 +25,8 @@ class FileService:
         JSON = 'json'
         XML = 'xml'
         TEXT = 'text'
+        HTML = 'html'
+        PDF = 'pdf'
 
     (
         check_file_type_stage,
@@ -36,7 +39,8 @@ class FileService:
     equivalent_file_formats = {
         FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
         FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
-        FileTypes.XML: [FileTypes.JSON, FileTypes.YML]
+        FileTypes.XML: [FileTypes.JSON, FileTypes.YML],
+        FileTypes.HTML: [FileTypes.PDF]
     }
 
     def __init__(
@@ -46,7 +50,8 @@ class FileService:
         command_service: CommandService,
         json_service: JsonService,
         yaml_service: YamlService,
-        xml_service: XMLService
+        xml_service: XMLService,
+        html_service: HTMLService
     ):
         self.telegram_service = telegram_service
         self.io_service = io_service
@@ -54,6 +59,7 @@ class FileService:
         self.json_service = json_service
         self.yaml_service = yaml_service
         self.xml_service = xml_service
+        self.html_service = html_service
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -64,7 +70,7 @@ class FileService:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
-
+        print(file_type)
         logger.debug(f'The type of {file_path} is {file_type}')
 
         if file_type in self.equivalent_file_formats:
@@ -81,6 +87,8 @@ class FileService:
             file_type = self.FileTypes.XML
         elif file_type == 'application/json':
             file_type = self.FileTypes.JSON
+        elif file_type == 'text/html':
+            file_type = self.FileTypes.HTML
         else:
             file_type = None
         return file_type
@@ -157,3 +165,6 @@ class FileService:
                 return self.xml_service.to_yml
             elif _requested_format == self.FileTypes.JSON:
                 return self.xml_service.to_json
+        elif source_file_type == self.FileTypes.HTML:
+            if _requested_format == self.FileTypes.PDF:
+                return self.html_service.to_pdf

@@ -80,6 +80,11 @@ class IOService:
             pass
 
     @contextmanager
+    def create_temp_pdf_file(self, prefix: str) -> Generator[str, None, None]:
+        with self.create_temp_file(prefix=prefix, suffix='.pdf') as out_path:
+            yield out_path
+
+    @contextmanager
     def create_temp_xml_file(self, prefix: str) -> Generator[str, None, None]:
         with self.create_temp_file(prefix=prefix, suffix='.xml') as out_path:
             yield out_path

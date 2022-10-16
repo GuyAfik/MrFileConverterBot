@@ -30,7 +30,7 @@ class UJsonConverter(BaseConverter):
     def write(self, data: Any, file_path: str, indent: int = 4):
         try:
             with open(file_path, 'w') as file:
-                ujson.dump(data, file, indent=indent)
+                self.json.dump(data, file, indent=indent)
         except ValueError as e:
             logger.error(
                 f'Failed to write {data} into JSON file {file_path}, error: {e}')
