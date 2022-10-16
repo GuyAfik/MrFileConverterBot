@@ -12,6 +12,7 @@ from mr_file_converter.downloader.youtube_downloader_service import \
     YoutubeDownloaderService
 from mr_file_converter.file.file_handler import FileHandlers
 from mr_file_converter.file.file_service import FileService
+from mr_file_converter.html.html_service import HTMLService
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
@@ -67,6 +68,11 @@ class Services(containers.DeclarativeContainer):
         yml_converter=converters.yaml,
         xml_converter=converters.xml
     )
+    html = providers.Factory(
+        HTMLService,
+        command_service=command,
+        io_service=io
+    )
     file = providers.Factory(
         FileService,
         telegram_service=telegram,
@@ -74,7 +80,8 @@ class Services(containers.DeclarativeContainer):
         command_service=command,
         json_service=json,
         yaml_service=yaml,
-        xml_service=xml
+        xml_service=xml,
+        html_service=html
     )
 
 
