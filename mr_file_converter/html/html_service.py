@@ -12,7 +12,6 @@ from mr_file_converter.io.io_service import IOService
 class HTMLService:
     """
     TODO: https://github.com/JazzCore/python-pdfkit - need to install wkhtmltopdf on the docker
-    TODO: brew install homebrew/cask/wkhtmltopdf
     """
 
     def __init__(
