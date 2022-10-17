@@ -5,6 +5,8 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from mr_file_converter.command.command_service import CommandService
+from mr_file_converter.downloader.errors import (InvalidYouTubeURL,
+                                                 YouTubeVideoDownloadError)
 from mr_file_converter.downloader.youtube_downloader import (
     YouTubeAudioDownloader, YouTubeDownloader, YouTubeVideoDownloader)
 from mr_file_converter.telegram.telegram_service import TelegramService
@@ -33,11 +35,9 @@ class YoutubeDownloaderService:
             context.user_data['youtube'] = YouTube(url)
             return self.choose_audio_or_video(update)
         except Exception as e:
-            logger.error(f'invalid YouTube video URL {url}, error: {e}')
-            self.telegram_service.reply_to_message(
-                update, text=f'The url {url} is invalid, please enter a valid url.'
-            )
-            return self.check_youtube_url_stage
+            logger.error(f'Error:\n{e}')
+            raise InvalidYouTubeURL(
+                next_stage=self.check_youtube_url_stage, url=url)
 
     def choose_audio_or_video(self, update: Update):
         self.telegram_service.send_message(
@@ -55,8 +55,14 @@ class YoutubeDownloaderService:
             update, text=f'Please hang on while I am bring to you the video in {_format} format...🤔'
         )
 
-        with self.youtube_downloader_factory(context, _format) as youtube_downloader:
-            return youtube_downloader.send(update)
+        try:
+            with self.youtube_downloader_factory(context, _format) as youtube_downloader:
+                return youtube_downloader.send(update)
+        except Exception as e:
+            logger.error(f'Error:\n{e}')
+            raise YouTubeVideoDownloadError(
+                url=context.user_data.get('youtube').watch_url, _format=_format
+            )
 
     def youtube_downloader_factory(self, context: CallbackContext, _type: str) -> YouTubeDownloader:
 

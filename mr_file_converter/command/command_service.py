@@ -31,20 +31,25 @@ class CommandService:
     def cancel(self, update: Update, context: CallbackContext, next_stage: int = ConversationHandler.END) -> int:
         if source_file_path := context.user_data.get('source_file_path'):
             self.io_service.remove_file(source_file_path)
-        self.help(update, context)
+        if next_stage == ConversationHandler.END:
+            self.help(update, context)
         return next_stage
 
     def error_handler(self, update: Update, context: CallbackContext) -> int:
         error = context.error
 
-        if hasattr(error, 'next_stage') and error.next_stage:
+        if hasattr(error, 'next_stage') and error.next_stage >= 0:
             next_stage = error.next_stage
         else:
             next_stage = ConversationHandler.END
 
-        self.telegram_service.send_message(
-            update=update,
-            text=f'{error}'
-        )
+        if hasattr(error, 'should_reply_to_message_id') and error.should_reply_to_message_id:
+            self.telegram_service.reply_to_message(update, text=f'{error}')
+        else:
+            self.telegram_service.send_message(
+                update=update,
+                text=f'{error}'
+            )
 
+        print(next_stage)
         return self.cancel(update, context, next_stage=next_stage)

@@ -70,15 +70,12 @@ class FileService:
             update=update, text='Please add here a file you would like to convert.')
         return self.check_file_type_stage
 
-    def get_file_type(self, update: Update, context: CallbackContext) -> str | None:
+    def get_file_type(self, update: Update, context: CallbackContext) -> str:
         file_path = self.telegram_service.get_file(update, context)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
         print(file_type)
         logger.debug(f'The type of the file {file_path} is {file_type}')
-
-        if file_type in self.equivalent_file_formats:
-            return file_type
 
         if file_type == 'text/plain' and (
             file_path.endswith('yml') or  # type: ignore
