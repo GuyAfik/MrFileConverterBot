@@ -19,6 +19,8 @@ class YoutubeDownloaderService:
     def __init__(self, telegram_service: TelegramService, command_service: CommandService):
         self.telegram_service = telegram_service
         self.command_service = command_service
+        self.youtube_audio_downloader_cls = YouTubeAudioDownloader
+        self.youtube_video_downloader_cls = YouTubeVideoDownloader
 
     def ask_youtube_url(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -64,8 +66,8 @@ class YoutubeDownloaderService:
             raise ValueError(f'type {_type} must be mp3/mp4 only.')
 
         type_to_class = {
-            'mp3': YouTubeAudioDownloader,
-            'mp4': YouTubeVideoDownloader
+            'mp3': self.youtube_audio_downloader_cls,
+            'mp4': self.youtube_video_downloader_cls
         }
 
         return type_to_class[_type](youtube, self.telegram_service)

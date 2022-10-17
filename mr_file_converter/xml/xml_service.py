@@ -2,7 +2,6 @@ import os
 from contextlib import contextmanager
 from typing import Generator
 
-from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.converters import (JsonConverter, XMLConverter,
                                           YamlConverter)
 from mr_file_converter.io.io_service import IOService
