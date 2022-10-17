@@ -1,6 +1,7 @@
-from telegram import Update
+from telegram import Message, Update
 from telegram.ext import CallbackContext, ConversationHandler
 
+from mr_file_converter.base_error import FileConverterException
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.telegram.telegram_service import TelegramService
 
@@ -27,8 +28,23 @@ class CommandService:
             update=update, text="Available commands: get_youtube_video, convert, start"
         )
 
-    def cancel(self, update: Update, context: CallbackContext):
+    def cancel(self, update: Update, context: CallbackContext, next_stage: int = ConversationHandler.END) -> int:
         if source_file_path := context.user_data.get('source_file_path'):
             self.io_service.remove_file(source_file_path)
         self.help(update, context)
-        return ConversationHandler.END
+        return next_stage
+
+    def error_handler(self, update: Update, context: CallbackContext) -> int:
+        error = context.error
+
+        if hasattr(error, 'next_stage') and error.next_stage:
+            next_stage = error.next_stage
+        else:
+            next_stage = ConversationHandler.END
+
+        self.telegram_service.send_message(
+            update=update,
+            text=f'{error}'
+        )
+
+        return self.cancel(update, context, next_stage=next_stage)

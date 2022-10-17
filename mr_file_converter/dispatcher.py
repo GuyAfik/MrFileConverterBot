@@ -28,3 +28,5 @@ def setup_dispatcher(
         command='start', callback=command_service.start))
     dispatcher.add_handler(youtube_downloader_handlers.conversation_handlers())
     dispatcher.add_handler(file_handlers.conversation_handlers())
+    dispatcher.add_error_handler(
+        callback=command_service.error_handler, run_async=True)
