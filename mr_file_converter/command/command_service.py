@@ -1,4 +1,4 @@
-from telegram import Message, Update
+from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.base_error import FileConverterException
