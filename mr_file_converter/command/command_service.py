@@ -17,7 +17,8 @@ class CommandService:
 
     def start(self, update: Update, context: CallbackContext):
         first_name, last_name = self.telegram_service.get_user_first_and_last_name(
-            update)
+            update
+        )
         self.telegram_service.send_message(
             update=update, text=f'Welcome {first_name} {last_name}, I am MrFileConverterBot, '
                                 f'available commands:\n/get_youtube_video: Get youtube video in mp3/mp4 format.'
@@ -37,17 +38,19 @@ class CommandService:
 
     def error_handler(self, update: Update, context: CallbackContext) -> int:
         error = context.error
+        should_send_message = True
 
-        if hasattr(error, 'next_stage') and error.next_stage >= 0:
-            next_stage = error.next_stage
+        if isinstance(error, FileConverterException):
+            next_stage = error.next_stage or ConversationHandler.END
+            if error.should_reply_to_message_id:
+                should_send_message = False
+                self.telegram_service.reply_to_message(update, text=f'{error}')
         else:
             next_stage = ConversationHandler.END
 
-        if hasattr(error, 'should_reply_to_message_id') and error.should_reply_to_message_id:
-            self.telegram_service.reply_to_message(update, text=f'{error}')
-        else:
+        if should_send_message:
             self.telegram_service.send_message(
-                update=update,
+                update,
                 text=f'{error}'
             )
 
