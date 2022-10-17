@@ -11,7 +11,7 @@ from mr_file_converter.converters import (JsonConverter, XMLConverter,
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.telegram.telegram_service import TelegramService
 
-BASE_PATH = '../tests'
+BASE_PATH = 'tests'
 
 
 @pytest.fixture()
