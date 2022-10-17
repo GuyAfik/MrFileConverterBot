@@ -2,10 +2,13 @@ import os.path
 
 import pytest
 from pytest_mock import MockerFixture
+from pytube import YouTube
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.command.command_service import CommandService
+from mr_file_converter.downloader.errors import (InvalidYouTubeURL,
+                                                 YouTubeVideoDownloadError)
 from mr_file_converter.downloader.youtube_downloader_service import \
     YoutubeDownloaderService
 from mr_file_converter.io.io_service import IOService
@@ -73,8 +76,9 @@ def test_check_invalid_youtube_url(
      - executing the 'check_youtube_url' stage
 
     Then:
-     - make sure the next stage should be the check_youtube_url_stage again.
-     - make sure a reply message is sent to the user indicating the URL is invalid.
+     - make sure the InvalidYouTubeURL exception is raised to trigger the error handler.
+     - make sure the next stage that is being passed to the exception is the 'check_youtube_url_stage'
+     - make sure that the attribute 'should_reply_to_message_id' is set to True.
     """
     mocker.patch.object(
         youtube_downloader_service.telegram_service,
@@ -82,20 +86,68 @@ def test_check_invalid_youtube_url(
         return_value='youtube.blabla'
     )
 
-    reply_to_message_mock = mocker.patch.object(
+    with pytest.raises(InvalidYouTubeURL) as excinfo:
+        youtube_downloader_service.check_youtube_url(
+            update=telegram_update, context=telegram_context
+        )
+
+    assert excinfo.value.next_stage == youtube_downloader_service.check_youtube_url_stage
+    assert excinfo.value.should_reply_to_message_id
+
+
+@pytest.mark.parametrize(
+    'invalid_youtube_urls',
+    [
+        ['a'],
+        ['a', 'b'],
+        ['a', 'b', 'c']
+    ]
+)
+def test_invalid_youtube_url_flow(
+    mocker: MockerFixture,
+    youtube_downloader_service: YoutubeDownloaderService,
+    telegram_update: Update,
+    telegram_context: CallbackContext,
+    invalid_youtube_urls
+):
+    """
+    Given:
+     - a bunch of invalid YouTube URLs and last one a valid youtube URL.
+
+    When:
+     - executing the 'check_youtube_url' stage
+
+    Then:
+     - make sure the InvalidYouTubeURL exception is as long as the YouTube URL is invalid.
+     - make sure the YouTube object is saved in context only when the YouTube URL is valid
+     - make sure the next stage should be download stage when the YouTube URL is valid.
+     - make sure a message was sent with an inline keyboard was sent with 'mp3' and 'mp4' when the YouTube URL is valid.
+    """
+    mocker.patch.object(
         youtube_downloader_service.telegram_service,
-        'reply_to_message'
+        'get_message_data',
+        side_effect=invalid_youtube_urls +
+        ['https://www.youtube.com/watch?v=rn9AQoI7mYU&list=RD7pKrVB5f2W0&index=5']
     )
 
+    for _ in range(len(invalid_youtube_urls)):
+        with pytest.raises(InvalidYouTubeURL):
+            youtube_downloader_service.check_youtube_url(
+                update=telegram_update, context=telegram_context
+            )
+
+    send_message_mock = mocker.patch.object(
+        youtube_downloader_service.telegram_service,
+        'send_message'
+    )
     next_stage = youtube_downloader_service.check_youtube_url(
         update=telegram_update, context=telegram_context
     )
-
-    assert next_stage == youtube_downloader_service.check_youtube_url_stage
-    assert reply_to_message_mock.called
-    assert reply_to_message_mock.call_args.kwargs == {
-        'text': 'The url youtube.blabla is invalid, please enter a valid url.'
-    }
+    assert next_stage == youtube_downloader_service.download_stage
+    assert send_message_mock.called
+    assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][0].text == 'mp3'
+    assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][1].text == 'mp4'
+    assert 'youtube' in telegram_context.user_data
 
 
 def test_download_video_as_mp3(
@@ -151,30 +203,44 @@ def test_download_mp3_failure(
     """
     Given:
      - mp3 requested format
-     - download operation to mp3 which failed.
+     - download operation to mp3 which failed
+     - YouTube object with valid URL
 
     When:
      - executing the 'download_video' stage
 
     Then:
-     - make sure an exception is raised.
+     - make sure the YouTubeVideoDownloadError exception is raised.
+     - make sure the right error is being raised with the correct URL.
     """
     def throw_exception():
         raise Exception('could not download youtube video as mp3')
 
-    mocker.patch.object(youtube_downloader_service.telegram_service,
-                        'get_message_data', return_value='mp3')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'edit_message')
+        youtube_downloader_service.telegram_service,
+        'get_message_data',
+        return_value='mp3'
+    )
+    mocker.patch.object(
+        youtube_downloader_service.telegram_service, 'edit_message'
+    )
 
     mocker.patch.object(
         youtube_downloader_service.youtube_audio_downloader_cls,
         'download',
         side_effect=throw_exception
     )
-    with pytest.raises(Exception):
+
+    telegram_context.user_data['youtube'] = YouTube(
+        'https://www.youtube.com/watch?v=rn9AQoI7mYU&list=RD7pKrVB5f2W0&index=5'
+    )
+
+    with pytest.raises(YouTubeVideoDownloadError) as excinfo:
         youtube_downloader_service.download_video(
-            telegram_update, telegram_context)
+            telegram_update, telegram_context
+        )
+
+    assert excinfo.value.args[0] == 'Failed to download YouTube video https://youtube.com/watch?v=rn9AQoI7mYU as mp3'
 
 
 def test_download_video_as_mp4(
@@ -227,8 +293,9 @@ def test_download_mp4_failure(
 ):
     """
     Given:
-     - mp3 requested format
+     - mp4 requested format
      - download operation to mp4 which failed.
+     - YouTube object with valid URL
 
     When:
      - executing the 'download_video' stage
@@ -249,6 +316,14 @@ def test_download_mp4_failure(
         'download',
         side_effect=throw_exception
     )
-    with pytest.raises(Exception):
+
+    telegram_context.user_data['youtube'] = YouTube(
+        'https://www.youtube.com/watch?v=rn9AQoI7mYU&list=RD7pKrVB5f2W0&index=5'
+    )
+
+    with pytest.raises(YouTubeVideoDownloadError) as excinfo:
         youtube_downloader_service.download_video(
-            telegram_update, telegram_context)
+            telegram_update, telegram_context
+        )
+
+    assert excinfo.value.args[0] == 'Failed to download YouTube video https://youtube.com/watch?v=rn9AQoI7mYU as mp4'
