@@ -5,7 +5,6 @@ from typing import Generator
 import pdfkit
 from html2image import Html2Image
 
-from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.io.io_service import IOService
 
 

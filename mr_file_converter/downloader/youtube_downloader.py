@@ -28,6 +28,9 @@ class YouTubeDownloader:
     def send(self, update: Update) -> int:
         pass
 
+    def download(self):
+        pass
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         if os.path.exists(self._path):
             os.remove(self._path)
@@ -41,7 +44,7 @@ class YouTubeVideoDownloader(YouTubeDownloader):
     def __enter__(self):
         # returns a file object that the video was downloaded into.
         try:
-            self._path = self._youtube.streams.get_highest_resolution().download()
+            self._path = self.download()
             return self
         except Exception as e:
             logger.error(
@@ -56,6 +59,9 @@ class YouTubeVideoDownloader(YouTubeDownloader):
         )
         return ConversationHandler.END
 
+    def download(self):
+        return self._youtube.streams.get_highest_resolution().download()
+
 
 class YouTubeAudioDownloader(YouTubeDownloader):
     """
@@ -64,7 +70,7 @@ class YouTubeAudioDownloader(YouTubeDownloader):
 
     def __enter__(self):
         try:
-            self._path = self._youtube.streams.get_audio_only().download()
+            self._path = self.download()
             base, _ = os.path.splitext(self._path)
             new_file = f'{base}.mp3'
             # due to pytube bug, rename the file to be .mp3 file
@@ -83,3 +89,6 @@ class YouTubeAudioDownloader(YouTubeDownloader):
             reply_to_message_id=self._telegram_service.get_message_id(update)
         )
         return ConversationHandler.END
+
+    def download(self):
+        return self._youtube.streams.get_audio_only().download()

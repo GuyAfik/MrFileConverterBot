@@ -2,7 +2,7 @@ from typing import IO, List, Tuple, Union
 
 from telegram import (Bot, CallbackQuery, InlineKeyboardButton,
                       InlineKeyboardMarkup, Message, ReplyMarkup, Update)
-from telegram.ext import CallbackContext, ConversationHandler, Updater
+from telegram.ext import CallbackContext, Updater
 from telegram.utils.types import ODVInput
 
 
