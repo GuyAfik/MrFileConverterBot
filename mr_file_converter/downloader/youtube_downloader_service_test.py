@@ -1,6 +1,4 @@
 import os.path
-from typing import cast
-from unittest.mock import MagicMock
 
 import pytest
 from pytest_mock import MockerFixture

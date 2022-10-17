@@ -1,6 +1,5 @@
 import logging
 import os
-from typing import IO, Optional, Union
 
 from pytube import YouTube
 from telegram import Update
