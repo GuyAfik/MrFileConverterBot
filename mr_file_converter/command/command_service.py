@@ -51,5 +51,4 @@ class CommandService:
                 text=f'{error}'
             )
 
-        print(next_stage)
         return self.cancel(update, context, next_stage=next_stage)
