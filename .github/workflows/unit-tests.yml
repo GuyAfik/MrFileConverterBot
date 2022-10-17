@@ -11,10 +11,12 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.10.7
+      - name: Install wkhtmltopdf
+        run: |
+          sudo apt-get install -y wkhtmltopdf
       - name: Install pipenv
         uses: dschep/install-pipenv-action@v1
       - name: Run unit-tests
         run: |
-          sudo apt-get install -y wkhtmltopdf
           pipenv install --dev
           pipenv run pytest
