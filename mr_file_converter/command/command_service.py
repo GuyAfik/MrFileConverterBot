@@ -41,7 +41,7 @@ class CommandService:
         should_send_message = True
 
         if isinstance(error, FileConverterException):
-            next_stage = error.next_stage or ConversationHandler.END
+            next_stage = error.next_stage
             if error.should_reply_to_message_id:
                 should_send_message = False
                 self.telegram_service.reply_to_message(update, text=f'{error}')

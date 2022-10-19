@@ -107,10 +107,7 @@ class FileService:
             )
             return self.ask_custom_file_name_stage
 
-        raise FileTypeNotSupported(
-            next_stage=ConversationHandler.END,
-            _file_type=file_type
-        )
+        raise FileTypeNotSupported(_file_type=file_type)
 
     def ask_custom_file_name(self, update: Update, context: CallbackContext) -> int:
         context.user_data['requested_format'] = self.telegram_service.get_message_data(
@@ -137,7 +134,6 @@ class FileService:
         except Exception as e:
             logger.error(f'Error:\n{e}')
             raise FileConversionError(
-                next_stage=ConversationHandler.END,
                 source_format=source_file_type,
                 target_format=_requested_format
             )
