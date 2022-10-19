@@ -29,6 +29,11 @@ class FileHandlers:
                     MessageHandler(
                         Filters.text, self.file_service.convert_file
                     )
+                ],
+                self.file_service.convert_additional_file_answer_stage: [
+                    CallbackQueryHandler(
+                        callback=self.file_service.convert_additional_file_answer
+                    )
                 ]
             },
             fallbacks=[

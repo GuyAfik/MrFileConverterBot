@@ -35,8 +35,9 @@ class FileService:
     (
         check_file_type_stage,
         ask_custom_file_name_stage,
-        convert_file_stage
-    ) = range(3)
+        convert_file_stage,
+        convert_additional_file_answer_stage
+    ) = range(4)
 
     supported_file_formats = {'json, yml'}
 
@@ -131,6 +132,8 @@ class FileService:
                 self.telegram_service.send_file(
                     update, document_path=destination_file_path
                 )
+                self.io_service.remove_file(source_file_path)
+                return self.ask_convert_additional_file(update)
         except Exception as e:
             logger.error(f'Error:\n{e}')
             raise FileConversionError(
@@ -165,3 +168,20 @@ class FileService:
                 return self.html_service.to_png
             if _requested_format == self.FileTypes.JPG:
                 return self.html_service.to_jpg
+
+    def ask_convert_additional_file(self, update: Update) -> int:
+        self.telegram_service.send_message(
+            update,
+            text='Would you like to convert another file?',
+            reply_markup=self.telegram_service.get_inline_keyboard(buttons=[
+                                                                   'yes', 'no'])
+        )
+        return self.convert_additional_file_answer_stage
+
+    def convert_additional_file_answer(self, update: Update, context: CallbackContext) -> int:
+        answer = self.telegram_service.get_message_data(update)
+        if answer == 'yes':
+            return self.start_message(update, context)
+        self.telegram_service.edit_message(
+            update, text='Thank you! Run /start or /help to view available commands')
+        return ConversationHandler.END
