@@ -173,7 +173,8 @@ class FileService:
         self.telegram_service.send_message(
             update,
             text='Would you like to convert another file?',
-            reply_markup=self.telegram_service.get_inline_keyboard(buttons=['yes', 'no'])
+            reply_markup=self.telegram_service.get_inline_keyboard(buttons=[
+                                                                   'yes', 'no'])
         )
         return self.convert_additional_file_answer_stage
 
@@ -181,5 +182,6 @@ class FileService:
         answer = self.telegram_service.get_message_data(update)
         if answer == 'yes':
             return self.start_message(update, context)
-        self.telegram_service.edit_message(update, text='Thank you! Run /start or /help to view available commands')
+        self.telegram_service.edit_message(
+            update, text='Thank you! Run /start or /help to view available commands')
         return ConversationHandler.END
