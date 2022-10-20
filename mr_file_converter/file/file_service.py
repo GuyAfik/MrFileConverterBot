@@ -1,5 +1,5 @@
 import logging
-from typing import Callable
+from typing import Callable, Generator
 
 from magic import from_file
 from telegram import Update
@@ -112,7 +112,8 @@ class FileService:
 
     def ask_custom_file_name(self, update: Update, context: CallbackContext) -> int:
         context.user_data['requested_format'] = self.telegram_service.get_message_data(
-            update)
+            update
+        )
         self.telegram_service.send_message(
             update=update,
             text='Please enter the file name you want for the converted file'
@@ -173,8 +174,9 @@ class FileService:
         self.telegram_service.send_message(
             update,
             text='Would you like to convert another file?',
-            reply_markup=self.telegram_service.get_inline_keyboard(buttons=[
-                                                                   'yes', 'no'])
+            reply_markup=self.telegram_service.get_inline_keyboard(
+                buttons=['yes', 'no']
+            )
         )
         return self.convert_additional_file_answer_stage
 

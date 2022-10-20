@@ -2,15 +2,10 @@ import os.path
 
 import pytest
 from pytest_mock import MockerFixture
-from pytube import YouTube
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
-from mr_file_converter.command.command_service import CommandService
-from mr_file_converter.downloader.errors import (InvalidYouTubeURL,
-                                                 YouTubeVideoDownloadError)
-from mr_file_converter.downloader.youtube_downloader_service import \
-    YoutubeDownloaderService
+from mr_file_converter.file.errors import FileTypeNotSupported
 from mr_file_converter.file.file_service import FileService
 
 
@@ -36,8 +31,19 @@ def test_check_file_supported_file_type(
     file_test_data_base_path: str,
     file_name: str,
     file_type: str
-
 ):
+    """
+    Given:
+     - supported files
+
+    When:
+     - running the 'check_file_type' method
+
+    Then:
+     - make sure there is a reply message saying the file type is supported
+     - make sure the file path / type is saved in the context
+     - make sure the next stage is the 'ask_custom_file_name_stage'
+    """
     file_path = f'{file_test_data_base_path}/{file_name}'
 
     mocker.patch.object(
@@ -52,9 +58,47 @@ def test_check_file_supported_file_type(
     )
 
     next_stage = file_service.check_file_type(
-        telegram_update, telegram_context)
+        telegram_update, telegram_context
+    )
 
     assert reply_to_message_mocker.called
     assert telegram_context.user_data['source_file_path'] == file_path
     assert telegram_context.user_data['source_file_type'] == file_type
     assert next_stage == file_service.ask_custom_file_name_stage
+
+
+@pytest.mark.parametrize(
+    'file_name',
+    [
+        'test.dxf',
+        'test.eps'
+    ]
+)
+def test_check_file_type_unsupported_file(
+    mocker: MockerFixture,
+    file_service: FileService,
+    telegram_update: Update,
+    telegram_context: CallbackContext,
+    file_test_data_base_path: str,
+    file_name: str,
+):
+    """
+    Given:
+     - unsupported files
+
+    When:
+     - running the 'check_file_type' method
+
+    Then:
+     - make sure the 'FileTypeNotSupported' exception is raised
+    """
+    mocker.patch.object(
+        file_service.telegram_service,
+        'get_file',
+        return_value=f'{file_test_data_base_path}/{file_name}'
+    )
+
+    with pytest.raises(FileTypeNotSupported):
+        file_service.check_file_type(
+            telegram_update, telegram_context
+        )
