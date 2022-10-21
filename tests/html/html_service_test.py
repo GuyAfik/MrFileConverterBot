@@ -3,14 +3,6 @@ import os.path
 import pytest
 
 from mr_file_converter.html.html_service import HTMLService
-from mr_file_converter.io.io_service import IOService
-
-
-@pytest.fixture()
-def html_service(
-    io_service: IOService
-) -> HTMLService:
-    return HTMLService(io_service=io_service)
 
 
 @pytest.fixture()

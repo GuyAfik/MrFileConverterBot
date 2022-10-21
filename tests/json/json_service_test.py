@@ -2,25 +2,7 @@ import os.path
 
 import pytest
 
-from mr_file_converter.converters import (JsonConverter, XMLConverter,
-                                          YamlConverter)
-from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
-
-
-@pytest.fixture()
-def json_service(
-    io_service: IOService,
-    json_converter: JsonConverter,
-    yaml_converter: YamlConverter,
-    xml_converter: XMLConverter
-) -> JsonService:
-    return JsonService(
-        io_service=io_service,
-        json_converter=json_converter,
-        yml_converter=yaml_converter,
-        xml_converter=xml_converter
-    )
 
 
 @pytest.fixture()
