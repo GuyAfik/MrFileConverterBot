@@ -19,8 +19,10 @@ class YoutubeDownloaderHandlers:
     def conversation_handlers(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[
-                CommandHandler('get_youtube_video',
-                               self.youtube_downloader_conversation.ask_youtube_url)
+                CommandHandler(
+                    'youtube',
+                    self.youtube_downloader_conversation.ask_youtube_url
+                )
             ],
             states={
                 self.youtube_downloader_conversation.check_youtube_url_stage: [
