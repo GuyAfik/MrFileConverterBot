@@ -1,16 +1,18 @@
 from telegram.ext import (CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler)
 
+from mr_file_converter.conversations.base_handler import \
+    BaseConversationHandler
 from mr_file_converter.conversations.file.file_conversation import \
     FileConversation
 from mr_file_converter.services.command.command_service import CommandService
 
 
-class FileHandlers:
+class FileHandlers(BaseConversationHandler):
 
     def __init__(self, file_conversation: FileConversation, command_service: CommandService):
+        super().__init__(command_service)
         self.file_conversation = file_conversation
-        self.command_service = command_service
 
     def conversation_handlers(self) -> ConversationHandler:
         return ConversationHandler(
@@ -39,14 +41,7 @@ class FileHandlers:
                     )
                 ]
             },
-            fallbacks=[
-                MessageHandler(
-                    filters=Filters.regex('^exit$'), callback=self.command_service.cancel
-                ),
-                CommandHandler(
-                    "cancel", callback=self.command_service.cancel
-                )
-            ],
+            fallbacks=self.get_fallbacks(),
             run_async=True,
             allow_reentry=True
         )
