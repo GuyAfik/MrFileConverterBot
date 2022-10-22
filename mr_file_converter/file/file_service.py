@@ -39,8 +39,6 @@ class FileService:
         convert_additional_file_answer_stage
     ) = range(4)
 
-    supported_file_formats = {'json, yml'}
-
     equivalent_file_formats = {
         FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
         FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
