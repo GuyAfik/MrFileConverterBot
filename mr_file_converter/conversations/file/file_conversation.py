@@ -7,7 +7,6 @@ from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.conversations.file.errors import (FileConversionError,
                                                          FileTypeNotSupported)
-from mr_file_converter.services.command.command_service import CommandService
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService

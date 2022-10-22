@@ -3,12 +3,18 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
 
 from mr_file_converter.conversations.youtube.youtube_downloader_conversation import \
     YoutubeDownloaderConversation
+from mr_file_converter.services.command.command_service import CommandService
 
 
 class YoutubeDownloaderHandlers:
 
-    def __init__(self, youtube_downloader_conversation: YoutubeDownloaderConversation):
+    def __init__(
+        self,
+        youtube_downloader_conversation: YoutubeDownloaderConversation,
+        command_service: CommandService
+    ):
         self.youtube_downloader_conversation = youtube_downloader_conversation
+        self.command_service = command_service
 
     def conversation_handlers(self) -> ConversationHandler:
         return ConversationHandler(
@@ -30,10 +36,11 @@ class YoutubeDownloaderHandlers:
             fallbacks=[
                 MessageHandler(
                     filters=Filters.regex('^exit$'),
-                    callback=self.youtube_downloader_conversation.command_service.cancel
+                    callback=self.command_service.cancel
                 ),
                 CommandHandler(
-                    "cancel", callback=self.youtube_downloader_conversation.command_service.cancel)
+                    "cancel", callback=self.command_service.cancel
+                )
             ],
             run_async=True,
             allow_reentry=True

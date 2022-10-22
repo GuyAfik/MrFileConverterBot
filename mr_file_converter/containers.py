@@ -81,7 +81,7 @@ class Services(containers.DeclarativeContainer):
 class Conversations(containers.DeclarativeContainer):
     services = providers.DependenciesContainer()
     youtube_downloader = providers.Factory(
-        YoutubeDownloaderConversation, telegram_service=services.telegram, command_service=services.command
+        YoutubeDownloaderConversation, telegram_service=services.telegram
     )
     url = providers.Factory(
         URLConversation,
@@ -101,11 +101,13 @@ class Conversations(containers.DeclarativeContainer):
 
 
 class Handlers(containers.DeclarativeContainer):
-
     services = providers.DependenciesContainer()
     conversations = providers.DependenciesContainer()
+
     youtube_downloader = providers.Factory(
-        YoutubeDownloaderHandlers, youtube_downloader_conversation=conversations.youtube_downloader
+        YoutubeDownloaderHandlers,
+        youtube_downloader_conversation=conversations.youtube_downloader,
+        command_service=services.command
     )
     file = providers.Factory(
         FileHandlers, file_conversation=conversations.file, command_service=services.command
