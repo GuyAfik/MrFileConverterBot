@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 from typing import Generator
+from urllib.request import urlopen
 
 import pdfkit
-from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
 from mr_file_converter.services.io.io_service import IOService
@@ -28,5 +28,6 @@ class URLService:
             prefix=custom_file_name
         ) as html_file:
             bs = BeautifulSoup(urlopen(url).read(), 'html.parser')
-            self.io_service.write_data_to_file(data=bs.prettify(), file_path=html_file)
+            self.io_service.write_data_to_file(
+                data=bs.prettify(), file_path=html_file)
             yield html_file
