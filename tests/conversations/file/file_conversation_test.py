@@ -1,7 +1,7 @@
 import pytest
 from pytest_mock import MockerFixture
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.conversations.file.errors import FileTypeNotSupported
 from mr_file_converter.conversations.file.file_conversation import \
@@ -101,3 +101,69 @@ def test_check_file_type_unsupported_file(
         file_conversation.check_file_type(
             telegram_update, telegram_context
         )
+
+
+def test_convert_additional_file_yes_option(
+    mocker: MockerFixture,
+    file_conversation: FileConversation,
+    telegram_update: Update,
+    telegram_context: CallbackContext,
+):
+    """
+    Given:
+     - 'yes' marked option to get additional file
+
+    When:
+     - running 'convert_additional_file_answer' method
+
+    Then:
+     - make sure the next stage is the 'check_file_type_stage' (first stage in the conversation)
+    """
+    mocker.patch.object(
+        file_conversation.telegram_service,
+        'get_message_data',
+        return_value='yes'
+    )
+    send_message_mocker = mocker.patch.object(
+        file_conversation.telegram_service, 'send_message'
+    )
+
+    next_stage = file_conversation.convert_additional_file_answer(
+        telegram_update, telegram_context
+    )
+
+    assert send_message_mocker.called
+    assert next_stage == file_conversation.check_file_type_stage
+
+
+def test_convert_additional_file_no_option(
+    mocker: MockerFixture,
+    file_conversation: FileConversation,
+    telegram_update: Update,
+    telegram_context: CallbackContext,
+):
+    """
+    Given:
+     - 'no' marked option to get additional file
+
+    When:
+     - running 'convert_additional_file_answer' method
+
+    Then:
+     - make sure the next stage is the 'ConversationHandler.END'
+    """
+    mocker.patch.object(
+        file_conversation.telegram_service,
+        'get_message_data',
+        return_value='no'
+    )
+    edit_message_mocker = mocker.patch.object(
+        file_conversation.telegram_service, 'edit_message'
+    )
+
+    next_stage = file_conversation.convert_additional_file_answer(
+        telegram_update, telegram_context
+    )
+
+    assert edit_message_mocker.called
+    assert next_stage == ConversationHandler.END
