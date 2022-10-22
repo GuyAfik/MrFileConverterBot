@@ -18,7 +18,11 @@ logger = logging.getLogger(__name__)
 
 class URLConversation:
 
-    check_url_validity_stage, convert_url_stage = range(2)
+    (
+        check_url_validity_stage,
+        ask_file_name_stage,
+        convert_url_stage
+    ) = range(3)
 
     supported_types = {'pdf'}
 
@@ -59,18 +63,27 @@ class URLConversation:
             reply_markup=self.telegram_service.get_inline_keyboard(
                 buttons=list(self.supported_types))
         )
+        return self.ask_file_name_stage
+
+    def ask_custom_file_name(self, update: Update, context: CallbackContext) -> int:
+        context.user_data['requested_format'] = self.telegram_service.get_message_data(
+            update
+        )
+        self.telegram_service.send_message(
+            update=update,
+            text='Please enter the file name you want for the converted file'
+        )
         return self.convert_url_stage
 
-    def convert_url(self, update: Update, context: CallbackContext):
-        requested_format = self.telegram_service.get_message_data(update)
+    def convert_url(self, update: Update, context: CallbackContext) -> int:
+        requested_format = context.user_data.get('requested_format')
         url = context.user_data.get('url')
-
-        # custom_file_name = self.telegram_service.get_message_data(update)
+        custom_file_name = self.telegram_service.get_message_data(update)
 
         try:
             with self.get_service(
                 requested_format
-            )(url, 'bla') as destination_file_path:
+            )(url, custom_file_name) as destination_file_path:
                 self.telegram_service.send_file(
                     update, document_path=destination_file_path
                 )

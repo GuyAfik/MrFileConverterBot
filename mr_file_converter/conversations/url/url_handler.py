@@ -25,9 +25,14 @@ class URLHandlers(BaseConversationHandler):
                         Filters.text, self.url_conversation.check_url_validity
                     )
                 ],
-                self.url_conversation.convert_url_stage: [
+                self.url_conversation.ask_file_name_stage: [
                     CallbackQueryHandler(
-                        callback=self.url_conversation.convert_url
+                        callback=self.url_conversation.ask_custom_file_name
+                    )
+                ],
+                self.url_conversation.convert_url_stage: [
+                    MessageHandler(
+                        Filters.text, self.url_conversation.convert_url
                     )
                 ],
             },
