@@ -16,6 +16,9 @@ from mr_file_converter.html.html_service import HTMLService
 from mr_file_converter.io.io_service import IOService
 from mr_file_converter.json.json_service import JsonService
 from mr_file_converter.telegram.telegram_service import TelegramService
+from mr_file_converter.url.url_converter import URLConverter
+from mr_file_converter.url.url_handler import URLHandlers
+from mr_file_converter.url.url_service import URLService
 from mr_file_converter.xml.xml_service import XMLService
 from mr_file_converter.yaml.yaml_service import YamlService
 
@@ -80,6 +83,13 @@ class Services(containers.DeclarativeContainer):
         html_service=html
     )
 
+    url_converter = providers.Factory(URLConverter, io_service=io)
+    url = providers.Factory(
+        URLService,
+        telegram_service=telegram,
+        url_converter=url_converter
+    )
+
 
 class Handlers(containers.DeclarativeContainer):
 
@@ -89,6 +99,9 @@ class Handlers(containers.DeclarativeContainer):
     )
     file = providers.Factory(
         FileHandlers, file_service=services.file
+    )
+    url = providers.Factory(
+        URLHandlers, url_service=services.url, command_service=services.command
     )
 
 

@@ -7,6 +7,7 @@ from mr_file_converter.containers import Application
 from mr_file_converter.downloader.youtube_downloader_handler import \
     YoutubeDownloaderHandlers
 from mr_file_converter.file.file_handler import FileHandlers
+from mr_file_converter.url.url_handler import URLHandlers
 
 
 @inject
@@ -20,6 +21,9 @@ def setup_dispatcher(
     ],
     file_handlers: FileHandlers = Provide[
         Application.handlers.file
+    ],
+    url_handlers: URLHandlers = Provide[
+        Application.handlers.url
     ]
 ):
     dispatcher.add_handler(CommandHandler(
@@ -28,5 +32,7 @@ def setup_dispatcher(
         command='start', callback=command_service.start))
     dispatcher.add_handler(youtube_downloader_handlers.conversation_handlers())
     dispatcher.add_handler(file_handlers.conversation_handlers())
+    dispatcher.add_handler(url_handlers.conversation_handlers())
     dispatcher.add_error_handler(
-        callback=command_service.error_handler, run_async=True)
+        callback=command_service.error_handler, run_async=True
+    )

@@ -40,6 +40,9 @@ class CommandService:
         error = context.error
         should_send_message = True
 
+        print(type(error))
+        print(error)
+
         if isinstance(error, FileConverterException):
             next_stage = error.next_stage
             if error.should_reply_to_message_id:
