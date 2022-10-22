@@ -10,7 +10,6 @@ from mr_file_converter.conversations.youtube.errors import (
     InvalidYouTubeURL, YouTubeVideoDownloadError)
 from mr_file_converter.conversations.youtube.youtube_downloader_conversation import \
     YoutubeDownloaderConversation
-from mr_file_converter.services.command.command_service import CommandService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
@@ -19,11 +18,8 @@ from mr_file_converter.services.telegram.telegram_service import \
 @pytest.fixture()
 def youtube_downloader_service(
     telegram_service: TelegramService,
-    command_service: CommandService
 ) -> YoutubeDownloaderConversation:
-    return YoutubeDownloaderConversation(
-        telegram_service=telegram_service, command_service=command_service
-    )
+    return YoutubeDownloaderConversation(telegram_service=telegram_service)
 
 
 def test_check_url_stage_valid_url(

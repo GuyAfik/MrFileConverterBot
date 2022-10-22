@@ -6,7 +6,6 @@ from telegram.ext import CallbackContext
 
 from mr_file_converter.conversations.youtube.errors import (
     InvalidYouTubeURL, YouTubeVideoDownloadError)
-from mr_file_converter.services.command.command_service import CommandService
 from mr_file_converter.services.downloader.youtube_downloader_service import (
     YouTubeAudioDownloaderService, YouTubeDownloaderService,
     YouTubeVideoDownloaderService)
@@ -20,9 +19,8 @@ class YoutubeDownloaderConversation:
 
     check_youtube_url_stage, download_stage = range(2)
 
-    def __init__(self, telegram_service: TelegramService, command_service: CommandService):
+    def __init__(self, telegram_service: TelegramService):
         self.telegram_service = telegram_service
-        self.command_service = command_service
         self.youtube_audio_downloader_cls = YouTubeAudioDownloaderService
         self.youtube_video_downloader_cls = YouTubeVideoDownloaderService
 
