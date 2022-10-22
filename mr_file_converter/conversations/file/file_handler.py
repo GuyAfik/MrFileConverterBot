@@ -15,7 +15,7 @@ class FileHandlers:
     def conversation_handlers(self) -> ConversationHandler:
         return ConversationHandler(
             entry_points=[
-                CommandHandler('convert', self.file_conversation.start_message)
+                CommandHandler('file', self.file_conversation.start_message)
             ],
             states={
                 self.file_conversation.check_file_type_stage: [
