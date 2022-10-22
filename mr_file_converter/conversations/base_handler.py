@@ -1,4 +1,4 @@
-from telegram.ext import MessageHandler, Filters, CommandHandler
+from telegram.ext import CommandHandler, Filters, MessageHandler
 
 from mr_file_converter.services.command.command_service import CommandService
 

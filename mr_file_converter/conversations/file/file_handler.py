@@ -1,10 +1,11 @@
 from telegram.ext import (CallbackQueryHandler, CommandHandler,
                           ConversationHandler, Filters, MessageHandler)
 
+from mr_file_converter.conversations.base_handler import \
+    BaseConversationHandler
 from mr_file_converter.conversations.file.file_conversation import \
     FileConversation
 from mr_file_converter.services.command.command_service import CommandService
-from mr_file_converter.conversations.base_handler import BaseConversationHandler
 
 
 class FileHandlers(BaseConversationHandler):
