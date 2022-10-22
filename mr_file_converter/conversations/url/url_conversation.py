@@ -1,7 +1,6 @@
 import logging
 import ssl
 from typing import Callable
-from urllib.error import URLError
 from urllib.request import urlopen
 
 from telegram import Update
@@ -38,6 +37,7 @@ class URLConversation:
     ):
         self.telegram_service = telegram_service
         self.url_service = url_service
+        self.urlopen = urlopen
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -53,10 +53,11 @@ class URLConversation:
 
         url = self.telegram_service.get_message_data(update)
         try:
-            urlopen(url, context=ignore_ssl())
-        except (URLError, ValueError) as e:
+            self.urlopen(url, context=ignore_ssl())
+        except Exception as e:
             logger.error(f'Error:\n{e}')
-            raise InvalidURL(url=url, next_stage=self.check_url_validity_stage)
+            raise InvalidURL(
+                url=url, next_stage=self.check_url_validity_stage, exception=e)
 
         context.user_data['url'] = url
         self.telegram_service.reply_to_message(
