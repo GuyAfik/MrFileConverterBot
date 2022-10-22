@@ -2,12 +2,12 @@ from dependency_injector.wiring import Provide, inject
 from telegram.ext import CommandHandler
 from telegram.ext.dispatcher import Dispatcher
 
-from mr_file_converter.command.command_service import CommandService
 from mr_file_converter.containers import Application
-from mr_file_converter.downloader.youtube_downloader_handler import \
+from mr_file_converter.conversations.file.file_handler import FileHandlers
+from mr_file_converter.conversations.url.url_handler import URLHandlers
+from mr_file_converter.conversations.youtube.youtube_downloader_handler import \
     YoutubeDownloaderHandlers
-from mr_file_converter.file.file_handler import FileHandlers
-from mr_file_converter.url.url_handler import URLHandlers
+from mr_file_converter.services.command.command_service import CommandService
 
 
 @inject
