@@ -10,13 +10,12 @@ from mr_file_converter.conversations.youtube.errors import (
     InvalidYouTubeURL, YouTubeVideoDownloadError)
 from mr_file_converter.conversations.youtube.youtube_downloader_conversation import \
     YoutubeDownloaderConversation
-from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 
 
 @pytest.fixture()
-def youtube_downloader_service(
+def youtube_downloader_conversation(
     telegram_service: TelegramService,
 ) -> YoutubeDownloaderConversation:
     return YoutubeDownloaderConversation(telegram_service=telegram_service)
@@ -24,7 +23,7 @@ def youtube_downloader_service(
 
 def test_check_url_stage_valid_url(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -41,18 +40,18 @@ def test_check_url_stage_valid_url(
      - make sure a message was sent with an inline keyboard was sent with 'mp3' and 'mp4'
     """
     mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'get_message_data',
         return_value='https://www.youtube.com/watch?v=xcMRjfT10h0&list=RD7pKrVB5f2W0&index=7'
     )
     send_message_mock = mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'send_message'
     )
-    next_stage = youtube_downloader_service.check_youtube_url(
+    next_stage = youtube_downloader_conversation.check_youtube_url(
         update=telegram_update, context=telegram_context
     )
-    assert next_stage == youtube_downloader_service.download_stage
+    assert next_stage == youtube_downloader_conversation.download_stage
     assert send_message_mock.called
     assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][0].text == 'mp3'
     assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][1].text == 'mp4'
@@ -61,7 +60,7 @@ def test_check_url_stage_valid_url(
 
 def test_check_invalid_youtube_url(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -78,17 +77,17 @@ def test_check_invalid_youtube_url(
      - make sure that the attribute 'should_reply_to_message_id' is set to True.
     """
     mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'get_message_data',
         return_value='youtube.blabla'
     )
 
     with pytest.raises(InvalidYouTubeURL) as excinfo:
-        youtube_downloader_service.check_youtube_url(
+        youtube_downloader_conversation.check_youtube_url(
             update=telegram_update, context=telegram_context
         )
 
-    assert excinfo.value.next_stage == youtube_downloader_service.check_youtube_url_stage
+    assert excinfo.value.next_stage == youtube_downloader_conversation.check_youtube_url_stage
     assert excinfo.value.should_reply_to_message_id
 
 
@@ -102,7 +101,7 @@ def test_check_invalid_youtube_url(
 )
 def test_invalid_youtube_url_flow(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext,
     invalid_youtube_urls
@@ -121,7 +120,7 @@ def test_invalid_youtube_url_flow(
      - make sure a message was sent with an inline keyboard was sent with 'mp3' and 'mp4' when the YouTube URL is valid.
     """
     mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'get_message_data',
         side_effect=invalid_youtube_urls +
         ['https://www.youtube.com/watch?v=rn9AQoI7mYU&list=RD7pKrVB5f2W0&index=5']
@@ -129,18 +128,18 @@ def test_invalid_youtube_url_flow(
 
     for _ in range(len(invalid_youtube_urls)):
         with pytest.raises(InvalidYouTubeURL):
-            youtube_downloader_service.check_youtube_url(
+            youtube_downloader_conversation.check_youtube_url(
                 update=telegram_update, context=telegram_context
             )
 
     send_message_mock = mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'send_message'
     )
-    next_stage = youtube_downloader_service.check_youtube_url(
+    next_stage = youtube_downloader_conversation.check_youtube_url(
         update=telegram_update, context=telegram_context
     )
-    assert next_stage == youtube_downloader_service.download_stage
+    assert next_stage == youtube_downloader_conversation.download_stage
     assert send_message_mock.called
     assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][0].text == 'mp3'
     assert send_message_mock.call_args.kwargs['reply_markup'].inline_keyboard[0][1].text == 'mp4'
@@ -149,8 +148,7 @@ def test_invalid_youtube_url_flow(
 
 def test_download_video_as_mp3(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
-    io_service: IOService,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -167,21 +165,21 @@ def test_download_video_as_mp3(
      - make sure that the next stage is the end of the conversation.
      - make sure that the file was sent as mp3 to telegram api before deletion.
     """
-    mocker.patch.object(youtube_downloader_service.telegram_service,
+    mocker.patch.object(youtube_downloader_conversation.telegram_service,
                         'get_message_data', return_value='mp3')
     send_audio_mocker = mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'send_audio')
+        youtube_downloader_conversation.telegram_service, 'send_audio')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'edit_message')
+        youtube_downloader_conversation.telegram_service, 'edit_message')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'get_message_id')
+        youtube_downloader_conversation.telegram_service, 'get_message_id')
     mocker.patch.object(
-        youtube_downloader_service.youtube_audio_downloader_cls,
+        youtube_downloader_conversation.youtube_audio_downloader_cls,
         'download',
         # pytube creates audio files with mp4
         return_value=open('test.mp4', 'w').name
     )
-    next_stage = youtube_downloader_service.download_video(
+    next_stage = youtube_downloader_conversation.download_video(
         telegram_update, telegram_context)
     assert not os.path.exists('test.mp3')
     assert not os.path.exists('test.mp4')
@@ -192,8 +190,7 @@ def test_download_video_as_mp3(
 
 def test_download_mp3_failure(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
-    io_service: IOService,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -214,16 +211,16 @@ def test_download_mp3_failure(
         raise Exception('could not download youtube video as mp3')
 
     mocker.patch.object(
-        youtube_downloader_service.telegram_service,
+        youtube_downloader_conversation.telegram_service,
         'get_message_data',
         return_value='mp3'
     )
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'edit_message'
+        youtube_downloader_conversation.telegram_service, 'edit_message'
     )
 
     mocker.patch.object(
-        youtube_downloader_service.youtube_audio_downloader_cls,
+        youtube_downloader_conversation.youtube_audio_downloader_cls,
         'download',
         side_effect=throw_exception
     )
@@ -233,7 +230,7 @@ def test_download_mp3_failure(
     )
 
     with pytest.raises(YouTubeVideoDownloadError) as excinfo:
-        youtube_downloader_service.download_video(
+        youtube_downloader_conversation.download_video(
             telegram_update, telegram_context
         )
 
@@ -242,8 +239,7 @@ def test_download_mp3_failure(
 
 def test_download_video_as_mp4(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
-    io_service: IOService,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -260,20 +256,20 @@ def test_download_video_as_mp4(
      - make sure that the next stage is the end of the conversation.
      - make sure that the file was sent as mp4 to telegram api before deletion.
     """
-    mocker.patch.object(youtube_downloader_service.telegram_service,
+    mocker.patch.object(youtube_downloader_conversation.telegram_service,
                         'get_message_data', return_value='mp4')
     send_video_mocker = mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'send_video')
+        youtube_downloader_conversation.telegram_service, 'send_video')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'edit_message')
+        youtube_downloader_conversation.telegram_service, 'edit_message')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'get_message_id')
+        youtube_downloader_conversation.telegram_service, 'get_message_id')
     mocker.patch.object(
-        youtube_downloader_service.youtube_video_downloader_cls,
+        youtube_downloader_conversation.youtube_video_downloader_cls,
         'download',
         return_value=open('test.mp4', 'w').name
     )
-    next_stage = youtube_downloader_service.download_video(
+    next_stage = youtube_downloader_conversation.download_video(
         telegram_update, telegram_context)
     assert not os.path.exists('test.mp4')
     assert next_stage == ConversationHandler.END
@@ -283,8 +279,7 @@ def test_download_video_as_mp4(
 
 def test_download_mp4_failure(
     mocker: MockerFixture,
-    youtube_downloader_service: YoutubeDownloaderConversation,
-    io_service: IOService,
+    youtube_downloader_conversation: YoutubeDownloaderConversation,
     telegram_update: Update,
     telegram_context: CallbackContext
 ):
@@ -303,13 +298,13 @@ def test_download_mp4_failure(
     def throw_exception():
         raise Exception('could not download youtube video as mp4')
 
-    mocker.patch.object(youtube_downloader_service.telegram_service,
+    mocker.patch.object(youtube_downloader_conversation.telegram_service,
                         'get_message_data', return_value='mp4')
     mocker.patch.object(
-        youtube_downloader_service.telegram_service, 'edit_message')
+        youtube_downloader_conversation.telegram_service, 'edit_message')
 
     mocker.patch.object(
-        youtube_downloader_service.youtube_video_downloader_cls,
+        youtube_downloader_conversation.youtube_video_downloader_cls,
         'download',
         side_effect=throw_exception
     )
@@ -319,7 +314,7 @@ def test_download_mp4_failure(
     )
 
     with pytest.raises(YouTubeVideoDownloadError) as excinfo:
-        youtube_downloader_service.download_video(
+        youtube_downloader_conversation.download_video(
             telegram_update, telegram_context
         )
 
