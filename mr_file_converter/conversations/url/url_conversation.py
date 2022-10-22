@@ -40,9 +40,7 @@ class URLConversation:
     def check_url_validity(self, update: Update, context: CallbackContext):
         url = self.telegram_service.get_message_data(update)
         try:
-            if urlopen(url).getcode() != 200:
-                raise InvalidURL(
-                    url=url, next_stage=self.check_url_validity_stage)
+            urlopen(url)
         except (URLError, ValueError) as e:
             logger.error(f'Error:\n{e}')
             raise InvalidURL(url=url, next_stage=self.check_url_validity_stage)
