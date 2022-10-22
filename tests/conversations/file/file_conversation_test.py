@@ -9,7 +9,8 @@ from mr_file_converter.conversations.file.file_conversation import \
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
-from mr_file_converter.services.telegram.telegram_service import TelegramService
+from mr_file_converter.services.telegram.telegram_service import \
+    TelegramService
 from mr_file_converter.services.xml.xml_service import XMLService
 from mr_file_converter.services.yaml.yaml_service import YamlService
 

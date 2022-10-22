@@ -5,7 +5,6 @@ import pytest
 from telegram import Update
 from telegram.ext import CallbackContext, Updater
 
-
 from mr_file_converter.converters import (JsonConverter, XMLConverter,
                                           YamlConverter)
 from mr_file_converter.services.command.command_service import CommandService
