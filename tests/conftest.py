@@ -5,16 +5,18 @@ import pytest
 from telegram import Update
 from telegram.ext import CallbackContext, Updater
 
-from mr_file_converter.command.command_service import CommandService
+from mr_file_converter.conversations.file.file_conversation import \
+    FileConversation
 from mr_file_converter.converters import (JsonConverter, XMLConverter,
                                           YamlConverter)
-from mr_file_converter.file.file_service import FileService
-from mr_file_converter.html.html_service import HTMLService
-from mr_file_converter.io.io_service import IOService
-from mr_file_converter.json.json_service import JsonService
-from mr_file_converter.telegram.telegram_service import TelegramService
-from mr_file_converter.xml.xml_service import XMLService
-from mr_file_converter.yaml.yaml_service import YamlService
+from mr_file_converter.services.command.command_service import CommandService
+from mr_file_converter.services.html.html_service import HTMLService
+from mr_file_converter.services.io.io_service import IOService
+from mr_file_converter.services.json.json_service import JsonService
+from mr_file_converter.services.telegram.telegram_service import \
+    TelegramService
+from mr_file_converter.services.xml.xml_service import XMLService
+from mr_file_converter.services.yaml.yaml_service import YamlService
 
 BASE_PATH = 'tests'
 
@@ -117,7 +119,7 @@ def yml_service(
 
 
 @pytest.fixture()
-def file_service(
+def file_conversation(
     telegram_service: TelegramService,
     io_service: IOService,
     command_service: CommandService,
@@ -125,8 +127,8 @@ def file_service(
     yml_service: YamlService,
     xml_service: XMLService,
     html_service: HTMLService
-) -> FileService:
-    return FileService(
+) -> FileConversation:
+    return FileConversation(
         telegram_service=telegram_service,
         io_service=io_service,
         command_service=command_service,
