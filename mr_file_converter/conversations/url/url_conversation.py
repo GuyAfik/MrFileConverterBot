@@ -21,8 +21,9 @@ class URLConversation:
     (
         check_url_validity_stage,
         ask_file_name_stage,
-        convert_url_stage
-    ) = range(3)
+        convert_url_stage,
+        convert_additional_url_stage
+    ) = range(4)
 
     supported_types = {'pdf'}
 
@@ -87,7 +88,7 @@ class URLConversation:
                 self.telegram_service.send_file(
                     update, document_path=destination_file_path
                 )
-                return ConversationHandler.END
+                return self.ask_convert_additional_url(update)
         except Exception as e:
             logger.error(f'Error:\n{e}')
             raise URLToFileConversionError(
@@ -98,3 +99,21 @@ class URLConversation:
     def get_service(self, requested_format: str) -> Callable:  # type: ignore
         if requested_format == self.FileTypes.PDF:
             return self.url_service.to_pdf
+
+    def ask_convert_additional_url(self, update: Update) -> int:
+        self.telegram_service.send_message(
+            update,
+            text='Would you like to convert another url into a file?',
+            reply_markup=self.telegram_service.get_inline_keyboard(
+                buttons=['yes', 'no']
+            )
+        )
+        return self.convert_additional_url_stage
+
+    def convert_additional_url_answer(self, update: Update, context: CallbackContext) -> int:
+        answer = self.telegram_service.get_message_data(update)
+        if answer == 'yes':
+            return self.start_message(update, context)
+        self.telegram_service.edit_message(
+            update, text='Thank you! Run /start or /help to view available commands')
+        return ConversationHandler.END

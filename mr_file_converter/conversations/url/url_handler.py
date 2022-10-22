@@ -35,6 +35,11 @@ class URLHandlers(BaseConversationHandler):
                         Filters.text, self.url_conversation.convert_url
                     )
                 ],
+                self.url_conversation.convert_additional_url_stage: [
+                    CallbackQueryHandler(
+                        callback=self.url_conversation.convert_additional_url_answer
+                    )
+                ]
             },
             fallbacks=self.get_fallbacks(),
             run_async=True,
