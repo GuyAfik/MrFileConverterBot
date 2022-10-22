@@ -25,10 +25,11 @@ class URLConversation:
         convert_additional_url_stage
     ) = range(4)
 
-    supported_types = {'pdf'}
+    supported_types = {'pdf', 'html'}
 
     class FileTypes:
         PDF = 'pdf'
+        HTML = 'html'
 
     def __init__(
         self,
@@ -99,6 +100,8 @@ class URLConversation:
     def get_service(self, requested_format: str) -> Callable:  # type: ignore
         if requested_format == self.FileTypes.PDF:
             return self.url_service.to_pdf
+        elif requested_format == self.FileTypes.HTML:
+            return self.url_service.to_html
 
     def ask_convert_additional_url(self, update: Update) -> int:
         self.telegram_service.send_message(
