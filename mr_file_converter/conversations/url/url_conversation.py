@@ -1,4 +1,5 @@
 import logging
+import ssl
 from typing import Callable
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -37,12 +38,16 @@ class URLConversation:
             update=update, text='Please add here a URL you would like to convert into a file')
         return self.check_url_validity_stage
 
-    def check_url_validity(self, update: Update, context: CallbackContext):
+    def check_url_validity(self, update: Update, context: CallbackContext) -> int:
+        def ignore_ssl():
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            return ctx
+
         url = self.telegram_service.get_message_data(update)
         try:
-            if urlopen(url).getcode() != 200:
-                raise InvalidURL(
-                    url=url, next_stage=self.check_url_validity_stage)
+            urlopen(url, context=ignore_ssl())
         except (URLError, ValueError) as e:
             logger.error(f'Error:\n{e}')
             raise InvalidURL(url=url, next_stage=self.check_url_validity_stage)
