@@ -122,7 +122,6 @@ def yml_service(
 def file_conversation(
     telegram_service: TelegramService,
     io_service: IOService,
-    command_service: CommandService,
     json_service: JsonService,
     yml_service: YamlService,
     xml_service: XMLService,
@@ -131,7 +130,6 @@ def file_conversation(
     return FileConversation(
         telegram_service=telegram_service,
         io_service=io_service,
-        command_service=command_service,
         json_service=json_service,
         yaml_service=yml_service,
         xml_service=xml_service,

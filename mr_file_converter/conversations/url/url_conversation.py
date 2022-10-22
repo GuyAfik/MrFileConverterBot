@@ -30,7 +30,7 @@ class URLConversation:
         url_service: URLService
     ):
         self.telegram_service = telegram_service
-        self.url_converter = url_service
+        self.url_service = url_service
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -79,4 +79,4 @@ class URLConversation:
 
     def get_service(self, requested_format: str) -> Callable:  # type: ignore
         if requested_format == self.FileTypes.PDF:
-            return self.url_converter.to_pdf
+            return self.url_service.to_pdf

@@ -93,7 +93,6 @@ class Conversations(containers.DeclarativeContainer):
         FileConversation,
         telegram_service=services.telegram,
         io_service=services.io,
-        command_service=services.command,
         json_service=services.json,
         yaml_service=services.yaml,
         xml_service=services.xml,
@@ -109,7 +108,7 @@ class Handlers(containers.DeclarativeContainer):
         YoutubeDownloaderHandlers, youtube_downloader_conversation=conversations.youtube_downloader
     )
     file = providers.Factory(
-        FileHandlers, file_conversation=conversations.file
+        FileHandlers, file_conversation=conversations.file, command_service=services.command
     )
     url = providers.Factory(
         URLHandlers, url_conversation=conversations.url, command_service=services.command

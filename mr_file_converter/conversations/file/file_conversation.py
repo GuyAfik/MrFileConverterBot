@@ -51,7 +51,6 @@ class FileConversation:
         self,
         telegram_service: TelegramService,
         io_service: IOService,
-        command_service: CommandService,
         json_service: JsonService,
         yaml_service: YamlService,
         xml_service: XMLService,
@@ -59,7 +58,6 @@ class FileConversation:
     ):
         self.telegram_service = telegram_service
         self.io_service = io_service
-        self.command_service = command_service
         self.json_service = json_service
         self.yaml_service = yaml_service
         self.xml_service = xml_service
