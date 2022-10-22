@@ -13,6 +13,7 @@ from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
+from mr_file_converter.services.url.url_service import URLService
 from mr_file_converter.services.xml.xml_service import XMLService
 from mr_file_converter.services.yaml.yaml_service import YamlService
 
@@ -121,3 +122,10 @@ def telegram_context() -> CallbackContext:
     context = cast(CallbackContext, MagicMock())
     context.user_data = {}
     return context
+
+
+@pytest.fixture()
+def url_service(
+    io_service: IOService
+) -> URLService:
+    return URLService(io_service=io_service)
