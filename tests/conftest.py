@@ -5,8 +5,7 @@ import pytest
 from telegram import Update
 from telegram.ext import CallbackContext, Updater
 
-from mr_file_converter.conversations.file.file_conversation import \
-    FileConversation
+
 from mr_file_converter.converters import (JsonConverter, XMLConverter,
                                           YamlConverter)
 from mr_file_converter.services.command.command_service import CommandService
@@ -115,25 +114,6 @@ def yml_service(
         json_converter=json_converter,
         yml_converter=yaml_converter,
         xml_converter=xml_converter
-    )
-
-
-@pytest.fixture()
-def file_conversation(
-    telegram_service: TelegramService,
-    io_service: IOService,
-    json_service: JsonService,
-    yml_service: YamlService,
-    xml_service: XMLService,
-    html_service: HTMLService
-) -> FileConversation:
-    return FileConversation(
-        telegram_service=telegram_service,
-        io_service=io_service,
-        json_service=json_service,
-        yaml_service=yml_service,
-        xml_service=xml_service,
-        html_service=html_service
     )
 
 
