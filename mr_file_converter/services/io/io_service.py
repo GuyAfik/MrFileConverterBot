@@ -99,6 +99,11 @@ class IOService:
         with self.create_temp_file(prefix=prefix, suffix='.html') as out_path:
             yield out_path
 
+    @contextmanager
+    def create_temp_docx_file(self, prefix: str) -> Generator[str, None, None]:
+        with self.create_temp_file(prefix=prefix, suffix='.docx') as out_path:
+            yield out_path
+
     @staticmethod
     def write_data_to_file(data: str, file_path: str, mode: str = 'w'):
         with open(file_path, mode) as file:

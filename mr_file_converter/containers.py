@@ -19,6 +19,7 @@ from mr_file_converter.services.command.command_service import CommandService
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
+from mr_file_converter.services.pdf.pdf_service import PdfService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.url.url_service import URLService
@@ -75,6 +76,10 @@ class Services(containers.DeclarativeContainer):
         HTMLService,
         io_service=io
     )
+    pdf = providers.Factory(
+        PdfService,
+        io_service=io
+    )
     url = providers.Factory(URLService, io_service=io)
 
 
@@ -96,7 +101,8 @@ class Conversations(containers.DeclarativeContainer):
         json_service=services.json,
         yaml_service=services.yaml,
         xml_service=services.xml,
-        html_service=services.html
+        html_service=services.html,
+        pdf_service=services.pdf
     )
 
 

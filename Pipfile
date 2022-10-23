@@ -15,6 +15,7 @@ dict2xml = "*"
 pdfkit = "*"
 html2image = "*"
 bs4 = "*"
+pdf2docx = "*"
 
 [dev-packages]
 pytest = "*"
