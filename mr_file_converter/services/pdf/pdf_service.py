@@ -2,8 +2,9 @@ import os
 from contextlib import contextmanager
 from typing import Generator
 
-from mr_file_converter.services.io.io_service import IOService
 import pdf2docx
+
+from mr_file_converter.services.io.io_service import IOService
 
 
 class PdfService:

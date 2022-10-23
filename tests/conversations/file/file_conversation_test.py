@@ -9,6 +9,7 @@ from mr_file_converter.conversations.file.file_conversation import \
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
+from mr_file_converter.services.pdf.pdf_service import PdfService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.xml.xml_service import XMLService
@@ -22,7 +23,8 @@ def file_conversation(
     json_service: JsonService,
     yml_service: YamlService,
     xml_service: XMLService,
-    html_service: HTMLService
+    html_service: HTMLService,
+    pdf_service: PdfService
 ) -> FileConversation:
     return FileConversation(
         telegram_service=telegram_service,
@@ -30,7 +32,8 @@ def file_conversation(
         json_service=json_service,
         yaml_service=yml_service,
         xml_service=xml_service,
-        html_service=html_service
+        html_service=html_service,
+        pdf_service=pdf_service
     )
 
 
