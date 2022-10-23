@@ -204,7 +204,9 @@ def test_check_url_validity_multiple_invalid_urls(
     'requested_format',
     [
         'pdf',
-        'html'
+        'html',
+        'jpg',
+        'png'
     ]
 )
 def test_convert_url_success(
@@ -247,7 +249,8 @@ def test_convert_url_success(
     )
 
     next_stage = url_conversation.convert_url(
-        telegram_update, telegram_context)
+        telegram_update, telegram_context
+    )
 
     assert next_stage == url_conversation.convert_additional_url_stage
     assert send_file_mocker.called
@@ -262,6 +265,12 @@ def test_convert_url_success(
         ),
         (
             'to_html', 'html'
+        ),
+        (
+            'to_png', 'png'
+        ),
+        (
+            'to_jpg', 'jpg'
         )
     ]
 )
