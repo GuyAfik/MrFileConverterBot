@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from typing import Generator
 from urllib.request import urlopen
 
+import imgkit
 import pdfkit
 from bs4 import BeautifulSoup
 
@@ -31,3 +32,11 @@ class URLService:
             self.io_service.write_data_to_file(
                 data=bs.prettify(), file_path=html_file)
             yield html_file
+
+    @contextmanager
+    def to_png(self, url: str, custom_file_name: str) -> Generator[str, None, None]:
+        with self.io_service.create_temp_png_file(
+            prefix=custom_file_name
+        ) as png_file:
+            imgkit.from_url(url, png_file)
+            yield png_file
