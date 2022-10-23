@@ -41,3 +41,23 @@ def test_url_to_html(url_service: URLService):
     ) as html_file:
         assert os.path.exists(html_file)
         assert html_file == 'test.html'
+
+
+def test_url_to_png(url_service: URLService):
+    """
+    Given:
+     - google URL.
+     - custom file name.
+
+    When:
+     - converting url into a png file
+
+    Then:
+     - make sure the file creation succeeds and that the file exists.
+     - make sure the name of the file is the correct.
+    """
+    with url_service.to_png(
+        url='https://www.google.com/', custom_file_name='test'
+    ) as html_file:
+        assert os.path.exists(html_file)
+        assert html_file == 'test.png'

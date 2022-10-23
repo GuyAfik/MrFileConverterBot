@@ -2,8 +2,8 @@ from contextlib import contextmanager
 from typing import Generator
 from urllib.request import urlopen
 
-import pdfkit
 import imgkit
+import pdfkit
 from bs4 import BeautifulSoup
 
 from mr_file_converter.services.io.io_service import IOService
