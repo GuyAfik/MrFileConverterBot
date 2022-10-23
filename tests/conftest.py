@@ -11,6 +11,7 @@ from mr_file_converter.services.command.command_service import CommandService
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
+from mr_file_converter.services.pdf.pdf_service import PdfService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.url.url_service import URLService
@@ -129,3 +130,10 @@ def url_service(
     io_service: IOService
 ) -> URLService:
     return URLService(io_service=io_service)
+
+
+@pytest.fixture()
+def pdf_service(
+    io_service: IOService
+) -> PdfService:
+    return PdfService(io_service=io_service)
