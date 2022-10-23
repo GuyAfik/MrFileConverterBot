@@ -24,7 +24,7 @@ def test_pdf_to_docx(pdf_service: PdfService, pdf_test_data_base_path: str):
      - make sure the name is correct
     """
     with pdf_service.to_docx(
-        source_file_path=f'test_data/test.pdf',
+        source_file_path=f'{pdf_test_data_base_path}/test.pdf',
         custom_file_name='test'
     ) as pdf_file:
         assert os.path.exists(pdf_file)
