@@ -10,6 +10,7 @@ from mr_file_converter.conversations.file.errors import (FileConversionError,
 from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
+from mr_file_converter.services.pdf.pdf_service import PdfService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.xml.xml_service import XMLService
@@ -31,6 +32,7 @@ class FileConversation:
         PDF = 'pdf'
         PNG = 'png'
         JPG = 'jpg'
+        DOCX = 'docx'
 
     (
         check_file_type_stage,
@@ -43,7 +45,8 @@ class FileConversation:
         FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
         FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
         FileTypes.XML: [FileTypes.JSON, FileTypes.YML],
-        FileTypes.HTML: [FileTypes.PDF, FileTypes.PNG, FileTypes.JPG]
+        FileTypes.HTML: [FileTypes.PDF, FileTypes.PNG, FileTypes.JPG],
+        FileTypes.PDF: [FileTypes.DOCX]
     }
 
     def __init__(
@@ -53,7 +56,8 @@ class FileConversation:
         json_service: JsonService,
         yaml_service: YamlService,
         xml_service: XMLService,
-        html_service: HTMLService
+        html_service: HTMLService,
+        pdf_service: PdfService
     ):
         self.telegram_service = telegram_service
         self.io_service = io_service
@@ -61,6 +65,7 @@ class FileConversation:
         self.yaml_service = yaml_service
         self.xml_service = xml_service
         self.html_service = html_service
+        self.pdf_service = pdf_service
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -87,6 +92,8 @@ class FileConversation:
             file_type = self.FileTypes.JSON
         elif file_type == 'text/html':
             file_type = self.FileTypes.HTML
+        elif file_type == 'application/pdf':
+            file_type = self.FileTypes.PDF
         return file_type
 
     def check_file_type(self, update: Update, context: CallbackContext) -> int:
@@ -165,6 +172,9 @@ class FileConversation:
                 return self.html_service.to_png
             if _requested_format == self.FileTypes.JPG:
                 return self.html_service.to_jpg
+        elif source_file_type == self.FileTypes.PDF:
+            if _requested_format == self.FileTypes.DOCX:
+                return self.pdf_service.to_docx
 
     def ask_convert_additional_file(self, update: Update) -> int:
         self.telegram_service.send_message(
