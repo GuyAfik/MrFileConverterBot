@@ -40,3 +40,11 @@ class URLService:
         ) as png_file:
             imgkit.from_url(url, png_file)
             yield png_file
+
+    @contextmanager
+    def to_jpg(self, url: str, custom_file_name: str) -> Generator[str, None, None]:
+        with self.io_service.create_temp_jpg_file(
+            prefix=custom_file_name
+        ) as jpg_file:
+            imgkit.from_url(url, jpg_file)
+            yield jpg_file
