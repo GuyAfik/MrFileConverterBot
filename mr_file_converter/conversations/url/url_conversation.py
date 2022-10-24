@@ -105,7 +105,8 @@ class URLConversation:
 
     def get_service(self, requested_format: str) -> Callable:
         if requested_format not in self.FileTypes.supported_file_types():
-            raise ValueError(f'the requested format {requested_format} is not supported')
+            raise ValueError(
+                f'the requested format {requested_format} is not supported')
 
         format_to_service_func = {
             self.FileTypes.PDF: self.url_service.to_pdf,
