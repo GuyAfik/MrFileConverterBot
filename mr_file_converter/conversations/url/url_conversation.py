@@ -24,13 +24,15 @@ class URLConversation:
         convert_additional_url_stage
     ) = range(4)
 
-    supported_types = {'pdf', 'html', 'png', 'jpg'}
-
     class FileTypes:
         PDF = 'pdf'
         HTML = 'html'
         PNG = 'png'
         JPG = 'jpg'
+
+        @classmethod
+        def supported_file_types(cls) -> list:
+            return list(cls.__dict__.values())
 
     def __init__(
         self,
@@ -66,7 +68,8 @@ class URLConversation:
             update,
             text='url can be formatted to the following file formats, please choose one of them',
             reply_markup=self.telegram_service.get_inline_keyboard(
-                buttons=list(self.supported_types))
+                buttons=self.FileTypes.supported_file_types()
+            )
         )
         return self.ask_file_name_stage
 
@@ -100,15 +103,19 @@ class URLConversation:
                 target_format=requested_format
             )
 
-    def get_service(self, requested_format: str) -> Callable:  # type: ignore
-        if requested_format == self.FileTypes.PDF:
-            return self.url_service.to_pdf
-        elif requested_format == self.FileTypes.HTML:
-            return self.url_service.to_html
-        elif requested_format == self.FileTypes.PNG:
-            return self.url_service.to_png
-        elif requested_format == self.FileTypes.JPG:
-            return self.url_service.to_jpg
+    def get_service(self, requested_format: str) -> Callable:
+        if requested_format not in self.FileTypes.supported_file_types():
+            raise ValueError(
+                f'the requested format {requested_format} is not supported')
+
+        format_to_service_func = {
+            self.FileTypes.PDF: self.url_service.to_pdf,
+            self.FileTypes.HTML: self.url_service.to_html,
+            self.FileTypes.PNG: self.url_service.to_png,
+            self.FileTypes.JPG: self.url_service.to_jpg
+        }
+
+        return format_to_service_func[requested_format]
 
     def ask_convert_additional_url(self, update: Update) -> int:
         self.telegram_service.send_message(
