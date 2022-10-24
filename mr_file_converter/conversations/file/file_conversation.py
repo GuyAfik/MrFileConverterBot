@@ -34,20 +34,21 @@ class FileConversation:
         JPG = 'jpg'
         DOCX = 'docx'
 
+        @classmethod
+        def equivalent_file_formats(cls) -> dict:
+            return {
+                cls.JSON: [cls.YML, cls.TEXT, cls.XML],
+                cls.YML: [cls.JSON, cls.TEXT, cls.XML],
+                cls.XML: [cls.JSON, cls.YML],
+                cls.HTML: [cls.PDF, cls.PNG, cls.JPG],
+                cls.PDF: [cls.DOCX]
+            }
     (
         check_file_type_stage,
         ask_custom_file_name_stage,
         convert_file_stage,
         convert_additional_file_answer_stage
     ) = range(4)
-
-    equivalent_file_formats = {
-        FileTypes.JSON: [FileTypes.YML, FileTypes.TEXT, FileTypes.XML],
-        FileTypes.YML: [FileTypes.JSON, FileTypes.TEXT, FileTypes.XML],
-        FileTypes.XML: [FileTypes.JSON, FileTypes.YML],
-        FileTypes.HTML: [FileTypes.PDF, FileTypes.PNG, FileTypes.JPG],
-        FileTypes.PDF: [FileTypes.DOCX]
-    }
 
     def __init__(
         self,
@@ -98,9 +99,8 @@ class FileConversation:
 
     def check_file_type(self, update: Update, context: CallbackContext) -> int:
         file_type = self.get_file_type(update, context)
-        if file_type in self.equivalent_file_formats:
+        if equivalent_types := self.FileTypes.equivalent_file_formats().get(file_type):
             context.user_data['source_file_type'] = file_type
-            equivalent_types = self.equivalent_file_formats.get(file_type, [])
             self.telegram_service.reply_to_message(
                 update=update,
                 text=f'The type of the file is {file_type}, It can be converted to the following types, '
@@ -110,7 +110,6 @@ class FileConversation:
                 )
             )
             return self.ask_custom_file_name_stage
-
         raise FileTypeNotSupported(_file_type=file_type)
 
     def ask_custom_file_name(self, update: Update, context: CallbackContext) -> int:
@@ -145,36 +144,34 @@ class FileConversation:
                 target_format=_requested_format
             )
 
-    def get_service(self, source_file_type: str, _requested_format: str) -> Callable:  # type: ignore
-        if source_file_type == self.FileTypes.YML:
-            if _requested_format == self.FileTypes.JSON:
-                return self.yaml_service.to_json
-            elif _requested_format == self.FileTypes.TEXT:
-                return self.yaml_service.to_text
-            elif _requested_format == self.FileTypes.XML:
-                return self.yaml_service.to_xml
-        elif source_file_type == self.FileTypes.JSON:
-            if _requested_format == self.FileTypes.YML:
-                return self.json_service.to_yml
-            elif _requested_format == self.FileTypes.TEXT:
-                return self.json_service.to_text
-            elif _requested_format == self.FileTypes.XML:
-                return self.json_service.to_xml
-        elif source_file_type == self.FileTypes.XML:
-            if _requested_format == self.FileTypes.YML:
-                return self.xml_service.to_yml
-            elif _requested_format == self.FileTypes.JSON:
-                return self.xml_service.to_json
-        elif source_file_type == self.FileTypes.HTML:
-            if _requested_format == self.FileTypes.PDF:
-                return self.html_service.to_pdf
-            if _requested_format == self.FileTypes.PNG:
-                return self.html_service.to_png
-            if _requested_format == self.FileTypes.JPG:
-                return self.html_service.to_jpg
-        elif source_file_type == self.FileTypes.PDF:
-            if _requested_format == self.FileTypes.DOCX:
-                return self.pdf_service.to_docx
+    def get_service(self, source_file_type: str, _requested_format: str) -> Callable:
+
+        format_to_service_func = {
+            self.FileTypes.YML: {
+                self.FileTypes.JSON: self.yaml_service.to_json,
+                self.FileTypes.TEXT: self.yaml_service.to_text,
+                self.FileTypes.XML: self.yaml_service.to_xml
+            },
+            self.FileTypes.JSON: {
+                self.FileTypes.YML: self.json_service.to_yml,
+                self.FileTypes.TEXT: self.json_service.to_text,
+                self.FileTypes.XML: self.json_service.to_xml
+            },
+            self.FileTypes.XML: {
+                self.FileTypes.YML: self.xml_service.to_yml,
+                self.FileTypes.JSON: self.xml_service.to_json
+            },
+            self.FileTypes.HTML: {
+                self.FileTypes.PDF: self.html_service.to_pdf,
+                self.FileTypes.PNG: self.html_service.to_png,
+                self.FileTypes.JPG: self.html_service.to_jpg
+            },
+            self.FileTypes.PDF: {
+                self.FileTypes.DOCX: self.pdf_service.to_docx
+            }
+        }
+
+        return format_to_service_func[source_file_type][_requested_format]
 
     def ask_convert_additional_file(self, update: Update) -> int:
         self.telegram_service.send_message(
