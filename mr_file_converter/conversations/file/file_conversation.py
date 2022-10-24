@@ -41,7 +41,7 @@ class FileConversation:
                 cls.YML: [cls.JSON, cls.TEXT, cls.XML],
                 cls.XML: [cls.JSON, cls.YML],
                 cls.HTML: [cls.PDF, cls.PNG, cls.JPG],
-                cls.PDF: [cls.DOCX]
+                cls.PDF: [cls.DOCX, cls.TEXT]
             }
     (
         check_file_type_stage,
@@ -167,7 +167,8 @@ class FileConversation:
                 self.FileTypes.JPG: self.html_service.to_jpg
             },
             self.FileTypes.PDF: {
-                self.FileTypes.DOCX: self.pdf_service.to_docx
+                self.FileTypes.DOCX: self.pdf_service.to_docx,
+                self.FileTypes.TEXT: self.pdf_service.to_txt
             }
         }
 
