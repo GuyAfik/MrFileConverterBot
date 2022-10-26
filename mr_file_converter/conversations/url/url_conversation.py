@@ -2,7 +2,7 @@ import logging
 import ssl
 from typing import Callable
 from urllib.request import urlopen
-
+import inspect
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -32,7 +32,9 @@ class URLConversation:
 
         @classmethod
         def supported_file_types(cls) -> list:
-            return list(cls.__dict__.values())
+            return [
+                member[1] for member in inspect.getmembers(cls) if not member[0].startswith('_') and not inspect.ismethod(member[1])
+            ]
 
     def __init__(
         self,
