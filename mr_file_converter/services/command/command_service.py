@@ -17,7 +17,8 @@ class CommandService:
         self.io_service = io_service
 
     def help(self, update: Update, context: CallbackContext):
-        first_name, last_name = self.telegram_service.get_user_first_and_last_name(update)
+        first_name, last_name = self.telegram_service.get_user_first_and_last_name(
+            update)
         self.telegram_service.send_message(
             update=update, text=f'Hello {first_name} {last_name}, This bot supports the following commands:\n\n'
                                 f'1) /file - convert between file types:\n\n'
