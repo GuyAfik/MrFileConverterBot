@@ -27,9 +27,8 @@ def setup_dispatcher(
     ]
 ):
     dispatcher.add_handler(CommandHandler(
-        command='help', callback=command_service.help))
-    dispatcher.add_handler(CommandHandler(
-        command='start', callback=command_service.start))
+        command='help', callback=command_service.help)
+    )
     dispatcher.add_handler(youtube_downloader_handlers.conversation_handlers())
     dispatcher.add_handler(file_handlers.conversation_handlers())
     dispatcher.add_handler(url_handlers.conversation_handlers())
