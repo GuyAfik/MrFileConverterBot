@@ -16,18 +16,19 @@ class CommandService:
         self.telegram_service = telegram_service
         self.io_service = io_service
 
-    def start(self, update: Update, context: CallbackContext):
-        first_name, last_name = self.telegram_service.get_user_first_and_last_name(
-            update
-        )
-        self.telegram_service.send_message(
-            update=update, text=f'Welcome {first_name} {last_name}, I am MrFileConverterBot, '
-                                f'available commands:\n/get_youtube_video: Get youtube video in mp3/mp4 format.'
-        )
-
     def help(self, update: Update, context: CallbackContext):
+        first_name, last_name = self.telegram_service.get_user_first_and_last_name(
+            update)
         self.telegram_service.send_message(
-            update=update, text="Available commands: get_youtube_video, convert, start"
+            update=update, text=f'Hello {first_name} {last_name}, This bot supports the following commands:\n\n'
+                                f'1) /file - convert between file types:\n\n'
+                                f'  a) json -> yml, text, xml, yml\n'
+                                f'  b) yml -> json, text, xml\n'
+                                f'  c) xml -> json, yml\n'
+                                f'  d) html -> pdf, png, jpg\n'
+                                f'  e) pdf -> docx, text\n\n'
+                                f'2) /url - convert URL into files, supported formats: [pdf, png, jpg, html]\n\n'
+                                f'3) /youtube - convert youtube video to mp3/mp4'
         )
 
     def cancel(self, update: Update, context: CallbackContext, next_stage: int = ConversationHandler.END) -> int:
