@@ -105,3 +105,8 @@ class IOService:
     def write_data_to_file(data: str, file_path: str, mode: str = 'w'):
         with open(file_path, mode) as file:
             file.write(data)
+
+    @staticmethod
+    def read_file(file_path: str, mode: str = 'r'):
+        with open(file_path, mode) as file:
+            return file.read()

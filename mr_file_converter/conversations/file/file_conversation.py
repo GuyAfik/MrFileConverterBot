@@ -40,7 +40,7 @@ class FileConversation:
                 cls.JSON: [cls.YML, cls.TEXT, cls.XML],
                 cls.YML: [cls.JSON, cls.TEXT, cls.XML],
                 cls.XML: [cls.JSON, cls.YML],
-                cls.HTML: [cls.PDF, cls.PNG, cls.JPG],
+                cls.HTML: [cls.PDF, cls.PNG, cls.JPG, cls.TEXT],
                 cls.PDF: [cls.DOCX, cls.TEXT]
             }
     (
@@ -164,7 +164,8 @@ class FileConversation:
             self.FileTypes.HTML: {
                 self.FileTypes.PDF: self.html_service.to_pdf,
                 self.FileTypes.PNG: self.html_service.to_png,
-                self.FileTypes.JPG: self.html_service.to_jpg
+                self.FileTypes.JPG: self.html_service.to_jpg,
+                self.FileTypes.TEXT: self.html_service.to_text
             },
             self.FileTypes.PDF: {
                 self.FileTypes.DOCX: self.pdf_service.to_docx,

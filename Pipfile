@@ -18,6 +18,7 @@ bs4 = "*"
 pdf2docx = "*"
 imgkit = "*"
 pypdf2 = "*"
+html2text = "*"
 
 [dev-packages]
 pytest = "*"

@@ -4,6 +4,7 @@ from typing import Generator
 
 import pdfkit
 from html2image import Html2Image
+import html2text
 
 from mr_file_converter.services.io.io_service import IOService
 
@@ -47,3 +48,16 @@ class HTMLService:
                 html_file=source_file_path, save_as=jpg_file
             )
             yield jpg_file
+
+    @contextmanager
+    def to_text(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+        with self.io_service.create_temp_txt_file(
+            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+        ) as text_file:
+            self.io_service.write_data_to_file(
+                data=html2text.html2text(
+                    self.io_service.read_file(file_path=source_file_path)
+                ),
+                file_path=text_file
+            )
+            yield text_file
