@@ -2,9 +2,9 @@ import os
 from contextlib import contextmanager
 from typing import Generator
 
+import html2text
 import pdfkit
 from html2image import Html2Image
-import html2text
 
 from mr_file_converter.services.io.io_service import IOService
 
