@@ -3,6 +3,7 @@ import os.path
 import pytest
 
 from mr_file_converter.services.html.html_service import HTMLService
+from mr_file_converter.services.io.io_service import IOService
 
 
 @pytest.fixture()
@@ -71,3 +72,26 @@ def test_html_to_jpg(html_service: HTMLService, html_test_data_base_path: str):
     ) as jpg_file:
         assert os.path.exists(jpg_file)
         assert jpg_file == 'test.jpg'
+
+
+def test_html_to_text(html_service: HTMLService, io_service: IOService, html_test_data_base_path: str):
+    """
+   Given:
+    - test html file
+    - custom file name.
+
+   When:
+    - converting a html file into text file.
+
+   Then:
+    - make sure the newly created text file exist in the file system
+    - make sure the name is correct
+    - make sure it is possible to read the text file
+   """
+    with html_service.to_text(
+        source_file_path=f'{html_test_data_base_path}/test.html',
+        custom_file_name='test'
+    ) as text_file:
+        assert os.path.exists(text_file)
+        assert text_file == 'test.txt'
+        assert io_service.read_file(text_file)
