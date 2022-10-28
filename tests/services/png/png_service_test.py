@@ -1,8 +1,8 @@
 import os
 
-from mr_file_converter.services.png.png_service import PngService
-
 import pytest
+
+from mr_file_converter.services.png.png_service import PngService
 
 
 @pytest.fixture()

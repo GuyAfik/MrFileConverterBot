@@ -101,7 +101,9 @@ class FileConversation:
         elif file_type == 'application/pdf':
             file_type = self.FileTypes.PDF
         elif (
-            file_type == 'image/jpeg' and file_path.endswith('.png')
+            # type: ignore
+            file_type == 'image/jpeg' and
+                file_path.endswith('.png')  # type: ignore
         ) or file_type == 'image/png':
             file_type = self.FileTypes.PNG
         return file_type
