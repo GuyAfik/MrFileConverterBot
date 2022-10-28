@@ -63,7 +63,6 @@ class URLConversation:
         try:
             self.urlopen(url, context=ignore_ssl())
         except Exception as e:
-            logger.error(f'Error:\n{e}')
             raise InvalidURL(
                 url=url, next_stage=self.check_url_validity_stage, exception=e)
 
@@ -101,10 +100,10 @@ class URLConversation:
                 )
                 return self.ask_convert_additional_url(update)
         except Exception as e:
-            logger.error(f'Error:\n{e}')
             raise URLToFileConversionError(
                 url=url,
-                target_format=requested_format
+                target_format=requested_format,
+                original_exception=e
             )
 
     def get_service(self, requested_format: str) -> Callable:
