@@ -7,10 +7,10 @@ from urllib.request import urlopen
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
-from mr_file_converter.services.url.errors import (
-    InvalidURL, URLToFileConversionError)
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
+from mr_file_converter.services.url.errors import (InvalidURL,
+                                                   URLToFileConversionError)
 from mr_file_converter.services.url.url_service import URLService
 
 logger = logging.getLogger(__name__)
