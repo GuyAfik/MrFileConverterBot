@@ -20,6 +20,7 @@ from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
 from mr_file_converter.services.pdf.pdf_service import PdfService
+from mr_file_converter.services.png.png_service import PngService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.url.url_service import URLService
@@ -81,6 +82,7 @@ class Services(containers.DeclarativeContainer):
         io_service=io
     )
     url = providers.Factory(URLService, io_service=io)
+    png = providers.Factory(PngService, io_service=io)
 
 
 class Conversations(containers.DeclarativeContainer):
@@ -102,7 +104,8 @@ class Conversations(containers.DeclarativeContainer):
         yaml_service=services.yaml,
         xml_service=services.xml,
         html_service=services.html,
-        pdf_service=services.pdf
+        pdf_service=services.pdf,
+        png_service=services.png
     )
 
 

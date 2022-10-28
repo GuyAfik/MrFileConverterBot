@@ -19,6 +19,7 @@ pdf2docx = "*"
 imgkit = "*"
 pypdf2 = "*"
 html2text = "*"
+img2pdf = "*"
 
 [dev-packages]
 pytest = "*"

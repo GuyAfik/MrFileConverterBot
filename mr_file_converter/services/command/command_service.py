@@ -26,7 +26,8 @@ class CommandService:
                                 f'  b) yml -> json, text, xml\n'
                                 f'  c) xml -> json, yml\n'
                                 f'  d) html -> pdf, png, jpg, text\n'
-                                f'  e) pdf -> docx, text\n\n'
+                                f'  e) pdf -> docx, text\n'
+                                f'  f) png -> pdf\n\n'
                                 f'2) /url - convert URL into files, supported formats: [pdf, png, jpg, html]\n\n'
                                 f'3) /youtube - convert youtube video to mp3/mp4'
         )
