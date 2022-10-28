@@ -45,8 +45,8 @@ def test_pdf_to_text(pdf_service: PdfService, pdf_test_data_base_path: str):
      - make sure the name is correct
     """
     with pdf_service.to_txt(
-            source_file_path=f'{pdf_test_data_base_path}/test.pdf',
-            custom_file_name='test'
+        source_file_path=f'{pdf_test_data_base_path}/test.pdf',
+        custom_file_name='test'
     ) as txt_file:
         assert os.path.exists(txt_file)
         assert txt_file == 'test.txt'

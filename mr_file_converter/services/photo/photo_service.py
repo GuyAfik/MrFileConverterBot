@@ -24,7 +24,8 @@ class PhotoService:
         ) as pdf_file:
             pdf_bytes = img2pdf.convert(source_file_path)
             self.io_service.write_data_to_file(
-                data=pdf_bytes, file_path=pdf_file, mode='wb')
+                data=pdf_bytes, file_path=pdf_file, mode='wb'
+            )
             yield pdf_file
 
     @contextmanager
@@ -33,7 +34,9 @@ class PhotoService:
             prefix=custom_file_name or os.path.splitext(source_file_path)[0]
         ) as text_file:
             photo_string = pytesseract.image_to_string(
-                Image.open(source_file_path))
+                Image.open(source_file_path)
+            )
             self.io_service.write_data_to_file(
-                data=photo_string, file_path=text_file)
+                data=photo_string, file_path=text_file
+            )
             yield text_file
