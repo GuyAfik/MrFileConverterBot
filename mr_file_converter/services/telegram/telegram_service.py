@@ -83,21 +83,24 @@ class TelegramService:
         return context.bot.get_file(file_id=file_id).download()
 
     def send_file(self, update: Update, document_path: str) -> Message:
-        return self.bot.send_document(
-            chat_id=self.get_chat_id(update),
-            document=open(document_path, 'rb')
-        )
+        with open(document_path, 'rb') as document:
+            return self.bot.send_document(
+                chat_id=self.get_chat_id(update),
+                document=document
+            )
 
     def send_audio(self, update: Update, audio_file_path: str, reply_to_message_id: int | None = None) -> Message:
-        return self.bot.send_audio(
-            chat_id=self.get_chat_id(update),
-            audio=open(audio_file_path, 'rb'),  # type: ignore
-            reply_to_message_id=reply_to_message_id
-        )
+        with open(audio_file_path, 'rb') as audio:
+            return self.bot.send_audio(
+                chat_id=self.get_chat_id(update),
+                audio=audio,  # type: ignore
+                reply_to_message_id=reply_to_message_id
+            )
 
     def send_video(self, update: Update, video_file_path: str, reply_to_message_id: int | None = None) -> Message:
-        return self.bot.send_video(
-            chat_id=self.get_chat_id(update),
-            video=open(video_file_path, 'rb'),  # type: ignore
-            reply_to_message_id=reply_to_message_id
-        )
+        with open(video_file_path, 'rb') as video:
+            return self.bot.send_video(
+                chat_id=self.get_chat_id(update),
+                video=video,  # type: ignore
+                reply_to_message_id=reply_to_message_id
+            )
