@@ -179,7 +179,7 @@ class FileConversation:
                 self.FileTypes.DOCX: self.pdf_service.to_docx,
                 self.FileTypes.TEXT: self.pdf_service.to_txt
             },
-            self.FileTypes.PNG: {
+            self.FileTypes.PHOTO: {
                 self.FileTypes.PDF: self.photo_service.to_pdf
             }
         }
