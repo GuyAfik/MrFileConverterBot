@@ -11,7 +11,7 @@ from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
 from mr_file_converter.services.pdf.pdf_service import PdfService
-from mr_file_converter.services.png.png_service import PhotoService
+from mr_file_converter.services.photo.photo_service import PhotoService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.xml.xml_service import XMLService
@@ -31,7 +31,7 @@ class FileConversation:
         TEXT = 'text'
         HTML = 'html'
         PDF = 'pdf'
-        PNG = 'png'
+        PNG = 'photo'
         JPG = 'jpg'
         DOCX = 'docx'
         PHOTO = 'photo'  # any photo file type such as photo,jpg
@@ -44,7 +44,7 @@ class FileConversation:
                 cls.XML: [cls.JSON, cls.YML],
                 cls.HTML: [cls.PDF, cls.PNG, cls.JPG, cls.TEXT],
                 cls.PDF: [cls.DOCX, cls.TEXT],
-                cls.PHOTO: [cls.PDF]
+                cls.PHOTO: [cls.PDF, cls.TEXT]
             }
     (
         check_file_type_stage,
@@ -180,7 +180,8 @@ class FileConversation:
                 self.FileTypes.TEXT: self.pdf_service.to_txt
             },
             self.FileTypes.PHOTO: {
-                self.FileTypes.PDF: self.photo_service.to_pdf
+                self.FileTypes.PDF: self.photo_service.to_pdf,
+                self.FileTypes.TEXT: self.photo_service.to_text
             }
         }
 

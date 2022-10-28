@@ -13,14 +13,14 @@ def photo_test_data_base_path(base_file_path) -> str:
 @pytest.mark.parametrize(
     'file_name',
     [
-        'test.png',
+        'test.photo',
         'test.jpg'
     ]
 )
 def test_photo_to_pdf(photo_service: PhotoService, photo_test_data_base_path: str, file_name: str):
     """
     Given:
-     - test photo file (png, jpg)
+     - test photo file (photo, jpg)
      - custom file name.
 
     When:
