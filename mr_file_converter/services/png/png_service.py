@@ -7,7 +7,7 @@ import img2pdf
 from mr_file_converter.services.io.io_service import IOService
 
 
-class PngService:
+class PhotoService:
 
     def __init__(
         self,

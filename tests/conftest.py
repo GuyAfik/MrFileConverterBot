@@ -12,7 +12,7 @@ from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
 from mr_file_converter.services.pdf.pdf_service import PdfService
-from mr_file_converter.services.png.png_service import PngService
+from mr_file_converter.services.png.png_service import PhotoService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.url.url_service import URLService
@@ -141,7 +141,7 @@ def pdf_service(
 
 
 @pytest.fixture()
-def png_service(
+def photo_service(
     io_service: IOService
-) -> PngService:
-    return PngService(io_service=io_service)
+) -> PhotoService:
+    return PhotoService(io_service=io_service)

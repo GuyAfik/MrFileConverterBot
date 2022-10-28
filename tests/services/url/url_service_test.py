@@ -70,7 +70,7 @@ def test_url_to_jpg(url_service: URLService):
      - custom file name.
 
     When:
-     - converting url into a png file
+     - converting url into a jpg file
 
     Then:
      - make sure the file creation succeeds and that the file exists.
