@@ -4,7 +4,7 @@ from pytube import YouTube
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from mr_file_converter.conversations.youtube.errors import (
+from mr_file_converter.services.downloader.errors import (
     InvalidYouTubeURL, YouTubeVideoDownloadError)
 from mr_file_converter.services.downloader.youtube_downloader_service import (
     YouTubeAudioDownloaderService, YouTubeDownloaderService,
