@@ -7,7 +7,7 @@ from urllib.request import urlopen
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
-from mr_file_converter.conversations.url.errors import (
+from mr_file_converter.services.url.errors import (
     InvalidURL, URLToFileConversionError)
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService

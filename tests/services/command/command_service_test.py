@@ -7,7 +7,7 @@ from telegram.ext import CallbackContext, ConversationHandler
 
 from mr_file_converter.conversations.file.errors import (FileConversionError,
                                                          FileTypeNotSupported)
-from mr_file_converter.conversations.youtube.errors import (
+from mr_file_converter.services.downloader.errors import (
     InvalidYouTubeURL, YouTubeVideoDownloadError)
 from mr_file_converter.conversations.youtube.youtube_downloader_conversation import \
     YoutubeDownloaderConversation
