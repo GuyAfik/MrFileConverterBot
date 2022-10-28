@@ -31,7 +31,7 @@ class FileConversation:
         TEXT = 'text'
         HTML = 'html'
         PDF = 'pdf'
-        PNG = 'photo'
+        PNG = 'png'
         JPG = 'jpg'
         DOCX = 'docx'
         PHOTO = 'photo'  # any photo file type such as photo,jpg

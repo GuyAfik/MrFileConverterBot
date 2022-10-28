@@ -60,7 +60,7 @@ def test_url_to_png(url_service: URLService):
         url='https://www.google.com/', custom_file_name='test'
     ) as png_file:
         assert os.path.exists(png_file)
-        assert png_file == 'test.photo'
+        assert png_file == 'test.png'
 
 
 def test_url_to_jpg(url_service: URLService):
