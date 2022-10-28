@@ -78,7 +78,9 @@ class TelegramService:
         return self.get_message(update).text
 
     def get_file(self, update: Update, context: CallbackContext) -> Union[str, IO]:
-        return context.bot.get_file(file_id=self.get_message(update).document).download()
+        message = self.get_message(update)
+        file_id = message.document.file_id if message.document else message.photo[0].file_id
+        return context.bot.get_file(file_id=file_id).download()
 
     def send_file(self, update: Update, document_path: str) -> Message:
         return self.bot.send_document(

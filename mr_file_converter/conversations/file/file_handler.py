@@ -22,7 +22,7 @@ class FileHandlers(BaseConversationHandler):
             states={
                 self.file_conversation.check_file_type_stage: [
                     MessageHandler(
-                        Filters.document, self.file_conversation.check_file_type
+                        Filters.document | Filters.photo, self.file_conversation.check_file_type
                     )
                 ],
                 self.file_conversation.ask_custom_file_name_stage: [
