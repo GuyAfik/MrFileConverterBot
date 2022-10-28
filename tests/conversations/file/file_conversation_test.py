@@ -26,7 +26,7 @@ def file_conversation(
     xml_service: XMLService,
     html_service: HTMLService,
     pdf_service: PdfService,
-        photo_service
+    photo_service: PhotoService
 ) -> FileConversation:
     return FileConversation(
         telegram_service=telegram_service,
