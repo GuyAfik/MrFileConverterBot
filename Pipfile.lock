@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "79633f07ce619f1332d8c58d9d2d58d7df24a83e50b34bee791f64a49278c2c6"
+            "sha256": "5a70106ef654910cfdcaedf5557870b44e13c1fdd7f6ad92fcc07d80ea2105f0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -404,7 +404,7 @@
                 "sha256:fa768eff5f9f958270b081bb33581b4b569faabf8774726b283edb06617101dc",
                 "sha256:fac2d65901fb0fdf20363fbd345c01958a742f2dc62a8dd4495af66e3ff502a4"
             ],
-            "markers": "python_version >= '3.7'",
+            "index": "pypi",
             "version": "==9.2.0"
         },
         "pymupdf": {
@@ -449,6 +449,14 @@
             ],
             "index": "pypi",
             "version": "==2.11.1"
+        },
+        "pytesseract": {
+            "hashes": [
+                "sha256:8f22cc98f765bf13517ead0c70effedb46c153540d25783e04014f28b55a5fc6",
+                "sha256:f1c3a8b0f07fd01a1085d451f5b8315be6eec1d5577a6796d46dc7a62bd4120f"
+            ],
+            "index": "pypi",
+            "version": "==0.3.10"
         },
         "python-docx": {
             "hashes": [

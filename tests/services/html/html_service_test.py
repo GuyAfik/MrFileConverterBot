@@ -39,10 +39,10 @@ def test_html_to_png(html_service: HTMLService, html_test_data_base_path: str):
      - custom file name.
 
     When:
-     - converting a html file into png file.
+     - converting a html file into photo file.
 
     Then:
-     - make sure the newly created png file exist in the file system
+     - make sure the newly created photo file exist in the file system
      - make sure the name is correct
     """
     with html_service.to_png(
