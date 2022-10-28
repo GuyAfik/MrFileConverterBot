@@ -206,7 +206,7 @@ def test_check_url_validity_multiple_invalid_urls(
         'pdf',
         'html',
         'jpg',
-        'png'
+        'photo'
     ]
 )
 def test_convert_url_success(
@@ -267,7 +267,7 @@ def test_convert_url_success(
             'to_html', 'html'
         ),
         (
-            'to_png', 'png'
+            'to_png', 'photo'
         ),
         (
             'to_jpg', 'jpg'

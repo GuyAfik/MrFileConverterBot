@@ -28,7 +28,7 @@ class URLConversation:
     class FileTypes:
         PDF = 'pdf'
         HTML = 'html'
-        PNG = 'png'
+        PNG = 'photo'
         JPG = 'jpg'
 
         @classmethod

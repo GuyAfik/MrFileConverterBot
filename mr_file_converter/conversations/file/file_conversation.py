@@ -11,7 +11,7 @@ from mr_file_converter.services.html.html_service import HTMLService
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.json.json_service import JsonService
 from mr_file_converter.services.pdf.pdf_service import PdfService
-from mr_file_converter.services.png.png_service import PngService
+from mr_file_converter.services.png.png_service import PhotoService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
 from mr_file_converter.services.xml.xml_service import XMLService
@@ -31,9 +31,10 @@ class FileConversation:
         TEXT = 'text'
         HTML = 'html'
         PDF = 'pdf'
-        PNG = 'png'
+        PNG = 'photo'
         JPG = 'jpg'
         DOCX = 'docx'
+        PHOTO = 'photo'  # any photo file type such as photo,jpg
 
         @classmethod
         def equivalent_file_formats(cls) -> dict:
@@ -43,7 +44,7 @@ class FileConversation:
                 cls.XML: [cls.JSON, cls.YML],
                 cls.HTML: [cls.PDF, cls.PNG, cls.JPG, cls.TEXT],
                 cls.PDF: [cls.DOCX, cls.TEXT],
-                cls.PNG: [cls.PDF]
+                cls.PHOTO: [cls.PDF]
             }
     (
         check_file_type_stage,
@@ -61,7 +62,7 @@ class FileConversation:
         xml_service: XMLService,
         html_service: HTMLService,
         pdf_service: PdfService,
-        png_service: PngService
+        photo_service: PhotoService
     ):
         self.telegram_service = telegram_service
         self.io_service = io_service
@@ -70,7 +71,7 @@ class FileConversation:
         self.xml_service = xml_service
         self.html_service = html_service
         self.pdf_service = pdf_service
-        self.png_service = png_service
+        self.photo_service = photo_service
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
@@ -100,12 +101,8 @@ class FileConversation:
             file_type = self.FileTypes.HTML
         elif file_type == 'application/pdf':
             file_type = self.FileTypes.PDF
-        elif (
-            # type: ignore
-            file_type == 'image/jpeg' and
-                file_path.endswith('.png')  # type: ignore
-        ) or file_type == 'image/png':
-            file_type = self.FileTypes.PNG
+        elif 'image' in file_type:
+            file_type = self.FileTypes.PHOTO
         return file_type
 
     def check_file_type(self, update: Update, context: CallbackContext) -> int:
@@ -183,7 +180,7 @@ class FileConversation:
                 self.FileTypes.TEXT: self.pdf_service.to_txt
             },
             self.FileTypes.PNG: {
-                self.FileTypes.PDF: self.png_service.to_pdf
+                self.FileTypes.PDF: self.photo_service.to_pdf
             }
         }
 
