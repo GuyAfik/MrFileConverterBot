@@ -149,10 +149,10 @@ class FileConversation:
                 self.io_service.remove_file(source_file_path)
                 return self.ask_convert_additional_file(update)
         except Exception as e:
-            logger.error(f'Error:\n{e}')
             raise FileConversionError(
                 source_format=source_file_type,
-                target_format=_requested_format
+                target_format=_requested_format,
+                original_exception=e
             )
 
     def get_service(self, source_file_type: str, _requested_format: str) -> Callable:

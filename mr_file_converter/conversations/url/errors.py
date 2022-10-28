@@ -16,6 +16,7 @@ class InvalidURL(FileConverterException):
         else:  # means we got an HttpError such as <HTTPError 403: 'Forbidden'>
             error_message = f'Unable to read {url}, please try a different url'
         super().__init__(
+            original_exception=exception,
             next_stage=next_stage,
             error_message=error_message,
             should_reply_to_message_id=True
@@ -29,8 +30,10 @@ class URLToFileConversionError(FileConverterException):
         url: str,
         target_format: str,
         next_stage: int | None = None,
+        original_exception: Exception | None = None
     ):
         super().__init__(
+            original_exception=original_exception,
             next_stage=next_stage,
             error_message=f'Error when converting URL {url} to target file format {target_format}'
         )

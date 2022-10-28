@@ -1,3 +1,5 @@
+import logging
+
 from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler
 
@@ -5,6 +7,8 @@ from mr_file_converter.base_error import FileConverterException
 from mr_file_converter.services.io.io_service import IOService
 from mr_file_converter.services.telegram.telegram_service import \
     TelegramService
+
+logger = logging.getLogger(__name__)
 
 
 class CommandService:
@@ -43,10 +47,11 @@ class CommandService:
         error = context.error
         should_send_message = True
 
-        print(type(error))
-        print(error)
+        logger.error(f'{type(error)=}, {error=}')
 
         if isinstance(error, FileConverterException):
+            if original_exception := error.original_exception:
+                logger.error(f'Original Error: {original_exception}')
             next_stage = error.next_stage
             if error.should_reply_to_message_id:
                 should_send_message = False

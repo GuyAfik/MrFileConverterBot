@@ -35,9 +35,11 @@ class YoutubeDownloaderConversation:
             context.user_data['youtube'] = YouTube(url)
             return self.choose_audio_or_video(update)
         except Exception as e:
-            logger.error(f'Error:\n{e}')
             raise InvalidYouTubeURL(
-                next_stage=self.check_youtube_url_stage, url=url)
+                next_stage=self.check_youtube_url_stage,
+                url=url,
+                original_exception=e
+            )
 
     def choose_audio_or_video(self, update: Update):
         self.telegram_service.send_message(
@@ -59,9 +61,10 @@ class YoutubeDownloaderConversation:
             with self.youtube_downloader_factory(context, _format) as youtube_downloader:
                 return youtube_downloader.send(update)
         except Exception as e:
-            logger.error(f'Error:\n{e}')
             raise YouTubeVideoDownloadError(
-                url=context.user_data.get('youtube').watch_url, _format=_format
+                url=context.user_data.get('youtube').watch_url,
+                _format=_format,
+                original_exception=e
             )
 
     def youtube_downloader_factory(self, context: CallbackContext, _type: str) -> YouTubeDownloaderService:
