@@ -79,7 +79,7 @@ class FileConversation:
         return self.check_file_type_stage
 
     def get_file_type(self, update: Update, context: CallbackContext) -> str:
-        file_path = self.telegram_service.get_file(update, context)
+        file_path = self.telegram_service.get_file(update)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
         print(file_type)

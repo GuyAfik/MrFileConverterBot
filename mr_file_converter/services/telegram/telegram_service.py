@@ -2,7 +2,7 @@ from typing import IO, List, Tuple, Union
 
 from telegram import (Bot, CallbackQuery, InlineKeyboardButton,
                       InlineKeyboardMarkup, Message, ReplyMarkup, Update)
-from telegram.ext import CallbackContext, Updater
+from telegram.ext import Updater
 from telegram.utils.types import ODVInput
 
 
@@ -77,10 +77,10 @@ class TelegramService:
             return callback_query.data
         return self.get_message(update).text
 
-    def get_file(self, update: Update, context: CallbackContext) -> Union[str, IO]:
+    def get_file(self, update: Update) -> Union[str, IO]:
         message = self.get_message(update)
         file_id = message.document.file_id if message.document else message.photo[0].file_id
-        return context.bot.get_file(file_id=file_id).download()
+        return self.bot.get_file(file_id=file_id).download()
 
     def send_file(self, update: Update, document_path: str) -> Message:
         with open(document_path, 'rb') as document:

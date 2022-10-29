@@ -64,7 +64,9 @@ def telegram_service(updater: MagicMock) -> TelegramService:
 
 @pytest.fixture()
 def telegram_update() -> Update:
-    return cast(Update, MagicMock())
+    update = cast(Update, MagicMock())
+    update.callback_query = None
+    return update
 
 
 @pytest.fixture()

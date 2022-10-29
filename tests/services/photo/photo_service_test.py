@@ -40,14 +40,14 @@ def test_photo_to_pdf(photo_service: PhotoService, photo_test_data_base_path: st
 
 def test_photo_to_text(photo_service: PhotoService, photo_test_data_base_path: str):
     """
-   Given:
+    Given:
     - test photo file (jpg)
     - custom file name.
 
-   When:
+    When:
     - converting a photo file (with text inside) into a text file.
 
-   Then:
+    Then:
     - make sure the newly created text file exist in the file system
     - make sure the name is correct
     - make sure the text content is correct
