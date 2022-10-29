@@ -1,12 +1,13 @@
+from typing import List, cast
 from unittest.mock import MagicMock
 
+import pytest
 from pytest_mock import MockerFixture
+from telegram import CallbackQuery, Document, Message, PhotoSize, Update
 from telegram.ext import CallbackContext
 
-from mr_file_converter.services.telegram.telegram_service import TelegramService
-import pytest
-from typing import cast, List
-from telegram import Document, Message, PhotoSize, Update, CallbackQuery
+from mr_file_converter.services.telegram.telegram_service import \
+    TelegramService
 
 
 @pytest.fixture()
@@ -126,7 +127,8 @@ def test_get_effective_message(
     """
     telegram_message.message_id = 'effective_message_123'
     telegram_update.effective_message = telegram_message
-    assert telegram_service.get_message(telegram_update).message_id == 'effective_message_123'
+    assert telegram_service.get_message(
+        telegram_update).message_id == 'effective_message_123'
 
 
 def test_get_message(
@@ -147,7 +149,8 @@ def test_get_message(
     telegram_message.message_id = 'message_123'
     telegram_update.message = telegram_message
     telegram_update.effective_message = None
-    assert telegram_service.get_message(telegram_update).message_id == 'message_123'
+    assert telegram_service.get_message(
+        telegram_update).message_id == 'message_123'
 
 
 def test_get_callback_query(
@@ -166,4 +169,5 @@ def test_get_callback_query(
     - make sure the message of the callback query is returned
     """
     telegram_update.callback_query = telegram_callback_query
-    assert telegram_service.get_message(telegram_update).message_id == 'callback_query_message_id'
+    assert telegram_service.get_message(
+        telegram_update).message_id == 'callback_query_message_id'
