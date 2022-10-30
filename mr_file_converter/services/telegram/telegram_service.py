@@ -82,11 +82,12 @@ class TelegramService:
         file_id = message.document.file_id if message.document else message.photo[0].file_id
         return self.bot.get_file(file_id=file_id).download()
 
-    def send_file(self, update: Update, document_path: str) -> Message:
+    def send_file(self, update: Update, document_path: str, file_name: str) -> Message:
         with open(document_path, 'rb') as document:
             return self.bot.send_document(
                 chat_id=self.get_chat_id(update),
-                document=document
+                document=document,
+                filename=file_name
             )
 
     def send_audio(self, update: Update, audio_file_path: str, reply_to_message_id: int | None = None) -> Message:
