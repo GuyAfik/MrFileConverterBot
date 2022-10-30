@@ -96,7 +96,9 @@ class URLConversation:
                 requested_format
             )(url, custom_file_name) as destination_file_path:
                 self.telegram_service.send_file(
-                    update, document_path=destination_file_path
+                    update,
+                    document_path=destination_file_path,
+                    file_name=f'{custom_file_name}.{requested_format}'
                 )
                 return self.ask_convert_additional_url(update)
         except Exception as e:
