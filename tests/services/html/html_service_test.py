@@ -22,14 +22,12 @@ def test_html_to_pdf(html_service: HTMLService, html_test_data_base_path: str):
 
     Then:
      - make sure the newly created pdf file exist in the file system
-     - make sure the name is correct
     """
     with html_service.to_pdf(
         source_file_path=f'{html_test_data_base_path}/test.html',
         custom_file_name='test'
     ) as pdf_file:
         assert os.path.exists(pdf_file)
-        assert pdf_file == 'test.pdf'
 
 
 def test_html_to_png(html_service: HTMLService, html_test_data_base_path: str):

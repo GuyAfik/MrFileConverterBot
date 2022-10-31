@@ -19,7 +19,6 @@ def test_url_to_pdf(url_service: URLService):
         url='https://www.google.com/', custom_file_name='test'
     ) as pdf_file:
         assert os.path.exists(pdf_file)
-        assert pdf_file == 'test.pdf'
 
 
 def test_url_to_html(url_service: URLService):
@@ -74,4 +73,3 @@ def test_url_to_jpg(url_service: URLService):
         url='https://www.google.com/', custom_file_name='test'
     ) as jpg_file:
         assert os.path.exists(jpg_file)
-        assert jpg_file == 'test.jpg'
