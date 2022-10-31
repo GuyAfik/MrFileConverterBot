@@ -227,6 +227,7 @@ def test_convert_url_success(
      - make sure the next stage is the 'convert_additional_url_stage'
      - make sure the file was sent
      - make sure a message to convert additional url was sent
+     - make sure the file-name that is being sent is correct
     """
     telegram_context.user_data['requested_format'] = requested_format
     telegram_context.user_data['url'] = 'https://www.google.com/'
@@ -254,6 +255,7 @@ def test_convert_url_success(
 
     assert next_stage == url_conversation.convert_additional_url_stage
     assert send_file_mocker.called
+    assert send_file_mocker.call_args.kwargs['file_name'] == f'test.{requested_format}'
     assert send_message_mocker.called
 
 
