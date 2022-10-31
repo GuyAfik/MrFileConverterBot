@@ -1,3 +1,5 @@
+import os.path
+
 import pytest
 from pytest_mock import MockerFixture
 from telegram import Update
@@ -199,3 +201,47 @@ def test_convert_additional_file_no_option(
 
     assert edit_message_mocker.called
     assert next_stage == ConversationHandler.END
+
+
+@pytest.mark.parametrize(
+    'file_name, file_type, requested_format',
+    [
+        ('test.json', 'json', 'yml'),
+        ('test.json', 'json', 'xml'),
+        ('test.json', 'json', 'text'),
+    ]
+)
+def test_convert_file(
+    mocker: MockerFixture,
+    file_conversation: FileConversation,
+    telegram_update: Update,
+    telegram_context: CallbackContext,
+    file_test_data_base_path: str,
+    file_name,
+    file_type,
+    requested_format
+):
+    """
+    Given:
+     - Case A: json file to yml file
+     - Case B: json file to xml file
+     - Case C: json file to text file
+
+    When:
+     - running 'convert file' method
+
+    Then:
+     - make sure file was sent with the correct name and suffix that user requested
+     - make sure the file conversion succeeds
+     - make sure the next stage is the 'convert_additional_file_answer_stage'
+    """
+    telegram_context.user_data['requested_format'] = requested_format
+    telegram_context.user_data['source_file_type'] = file_type
+    telegram_context.user_data['source_file_path'] = f'test_data/{file_name}'
+
+    send_file_mocker = mocker.patch.object(file_conversation.telegram_service, 'send_file')
+    mocker.patch.object(file_conversation.telegram_service, 'get_message_data', return_value='file_name')
+    next_stage = file_conversation.convert_file(telegram_update, telegram_context, should_delete_source_file=False)
+    assert send_file_mocker.called
+    assert send_file_mocker.call_args.kwargs['file_name'] == f'file_name.{requested_format}'
+    assert next_stage == file_conversation.convert_additional_file_answer_stage
