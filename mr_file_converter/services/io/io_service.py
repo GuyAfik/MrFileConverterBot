@@ -34,24 +34,17 @@ class IOService:
     def create_temp_file(
         self, prefix: str | None = None, suffix: str | None = None, should_delete: bool = True
     ) -> Generator[str, None, None]:
-
         if suffix and '.' not in suffix:
             suffix = f'.{suffix}'
 
         try:
-            temporary_file = self.named_temporary_file(
+            with self.named_temporary_file(
                 prefix=prefix, suffix=suffix, delete=should_delete
-            )
-            file_name = f'{prefix}{suffix}'
-            os.rename(temporary_file.name, file_name)
-            yield file_name
+            ) as temp_file:
+                yield temp_file.name
         except Exception as e:
             logger.error(f'failed to create temp file {prefix}{suffix}')
             raise e
-        finally:
-            os.rename(file_name, temporary_file.name)
-            temporary_file.close()
-            self.remove_file(temporary_file.name)
 
     @contextmanager
     def create_temp_json_file(self, prefix: str) -> Generator[str, None, None]:

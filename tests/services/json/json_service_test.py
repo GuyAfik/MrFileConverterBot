@@ -21,7 +21,6 @@ def test_json_to_yml(json_service: JsonService, json_test_data_base_path: str):
 
     Then:
      - make sure the newly created yml file exist in the file system
-     - make sure the name is correct
      - make sure it's possible to read the yml file after it has been converted.
     """
     with json_service.to_yml(
@@ -29,7 +28,6 @@ def test_json_to_yml(json_service: JsonService, json_test_data_base_path: str):
         custom_file_name='test'
     ) as yml_file:
         assert os.path.exists(yml_file)
-        assert yml_file == 'test.yml'
         assert json_service.yml_converter.read(yml_file)
 
 
@@ -44,7 +42,6 @@ def test_json_to_xml(json_service: JsonService, json_test_data_base_path: str):
 
     Then:
      - make sure the newly created XML file exist in the file system
-     - make sure the name is correct
      - make sure it's possible to read the XML file after it has been converted.
     """
     with json_service.to_xml(
@@ -52,7 +49,6 @@ def test_json_to_xml(json_service: JsonService, json_test_data_base_path: str):
         custom_file_name='test'
     ) as xml_file:
         assert os.path.exists(xml_file)
-        assert xml_file == 'test.xml'
         assert json_service.xml_converter.read(xml_file)
 
 
@@ -67,11 +63,9 @@ def test_json_to_text(json_service: JsonService, json_test_data_base_path: str):
 
     Then:
      - make sure the newly created text file exist in the file system
-     - make sure the name is correct
     """
     with json_service.to_text(
         source_file_path=f'{json_test_data_base_path}/test.json',
         custom_file_name='test'
     ) as text_file:
         assert os.path.exists(text_file)
-        assert text_file == 'test.txt'

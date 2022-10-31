@@ -141,7 +141,9 @@ class FileConversation:
                 source_file_type, _requested_format
             )(source_file_path, custom_file_name) as destination_file_path:
                 self.telegram_service.send_file(
-                    update, document_path=destination_file_path
+                    update,
+                    document_path=destination_file_path,
+                    file_name=f'{custom_file_name}.{_requested_format}'
                 )
                 self.io_service.remove_file(source_file_path)
                 return self.ask_convert_additional_file(update)

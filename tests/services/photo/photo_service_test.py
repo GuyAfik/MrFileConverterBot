@@ -28,14 +28,12 @@ def test_photo_to_pdf(photo_service: PhotoService, photo_test_data_base_path: st
 
     Then:
      - make sure the newly created pdf file exist in the file system
-     - make sure the name is correct
     """
     with photo_service.to_pdf(
         source_file_path=f'{photo_test_data_base_path}/{file_name}',
         custom_file_name='test'
     ) as pdf_file:
         assert os.path.exists(pdf_file)
-        assert pdf_file == 'test.pdf'
 
 
 def test_photo_to_text(photo_service: PhotoService, photo_test_data_base_path: str):
@@ -49,7 +47,6 @@ def test_photo_to_text(photo_service: PhotoService, photo_test_data_base_path: s
 
     Then:
     - make sure the newly created text file exist in the file system
-    - make sure the name is correct
     - make sure the text content is correct
    """
     with photo_service.to_text(
@@ -57,6 +54,5 @@ def test_photo_to_text(photo_service: PhotoService, photo_test_data_base_path: s
         custom_file_name='test'
     ) as text_file:
         assert os.path.exists(text_file)
-        assert text_file == 'test.txt'
         with open(text_file, 'r') as file:
             assert file.read().strip() == 'Sample Text 1'
