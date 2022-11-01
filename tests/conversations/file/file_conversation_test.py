@@ -209,6 +209,19 @@ def test_convert_additional_file_no_option(
         ('test.json', 'json', 'yml'),
         ('test.json', 'json', 'xml'),
         ('test.json', 'json', 'text'),
+        ('test.yml', 'yml', 'json'),
+        ('test.yml', 'yml', 'xml'),
+        ('test.yml', 'yml', 'text'),
+        ('test.xml', 'xml', 'json'),
+        ('test.xml', 'xml', 'yml'),
+        ('test.pdf', 'pdf', 'docx'),
+        ('test.pdf', 'pdf', 'text'),
+        ('test.html', 'html', 'text'),
+        ('test.html', 'html', 'jpg'),
+        ('test.html', 'html', 'png'),
+        ('test.html', 'html', 'pdf'),
+        ('test.jpg', 'photo', 'text'),
+        ('test.png', 'photo', 'pdf'),
     ]
 )
 def test_convert_file(
@@ -217,15 +230,28 @@ def test_convert_file(
     telegram_update: Update,
     telegram_context: CallbackContext,
     file_test_data_base_path: str,
-    file_name,
-    file_type,
-    requested_format
+    file_name: str,
+    file_type: str,
+    requested_format: str
 ):
     """
     Given:
-     - Case A: json file to yml file
-     - Case B: json file to xml file
-     - Case C: json file to text file
+     - Case 1: json file to yml file
+     - Case 2: json file to xml file
+     - Case 3: json file to text file
+     - Case 4: yml file to json file
+     - Case 5: yml file to xml file
+     - Case 6: yml file to text file
+     - Case 7: xml file to json file
+     - Case 8: xml file to yml file
+     - Case 9: pdf file to docx file
+     - Case 10: pdf file to text file
+     - Case 11: html file to text file
+     - Case 12: html file to jpg file
+     - Case 13: html file to png file
+     - Case 14: html file to pdf file
+     - Case 15: jpg file to text file
+     - Case 16: png file to pdf
 
     When:
      - running 'convert file' method
@@ -237,7 +263,7 @@ def test_convert_file(
     """
     telegram_context.user_data['requested_format'] = requested_format
     telegram_context.user_data['source_file_type'] = file_type
-    telegram_context.user_data['source_file_path'] = f'test_data/{file_name}'
+    telegram_context.user_data['source_file_path'] = f'{file_test_data_base_path}/{file_name}'
 
     send_file_mocker = mocker.patch.object(file_conversation.telegram_service, 'send_file')
     mocker.patch.object(file_conversation.telegram_service, 'get_message_data', return_value='file_name')
