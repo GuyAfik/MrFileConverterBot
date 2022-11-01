@@ -265,9 +265,13 @@ def test_convert_file(
     telegram_context.user_data['source_file_type'] = file_type
     telegram_context.user_data['source_file_path'] = f'{file_test_data_base_path}/{file_name}'
 
-    send_file_mocker = mocker.patch.object(file_conversation.telegram_service, 'send_file')
-    mocker.patch.object(file_conversation.telegram_service, 'get_message_data', return_value='file_name')
-    next_stage = file_conversation.convert_file(telegram_update, telegram_context, should_delete_source_file=False)
+    send_file_mocker = mocker.patch.object(
+        file_conversation.telegram_service, 'send_file')
+    mocker.patch.object(file_conversation.telegram_service,
+                        'get_message_data', return_value='file_name')
+    next_stage = file_conversation.convert_file(
+        telegram_update, telegram_context, should_delete_source_file=False)
     assert send_file_mocker.called
-    assert send_file_mocker.call_args.kwargs['file_name'] == f'file_name.{requested_format}'
+    assert send_file_mocker.call_args.kwargs[
+        'file_name'] == f'file_name.{requested_format}'
     assert next_stage == file_conversation.convert_additional_file_answer_stage
