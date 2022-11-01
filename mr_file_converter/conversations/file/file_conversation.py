@@ -130,7 +130,12 @@ class FileConversation:
         )
         return self.convert_file_stage
 
-    def convert_file(self, update: Update, context: CallbackContext):
+    def convert_file(
+        self,
+        update: Update,
+        context: CallbackContext,
+        should_delete_source_file: bool = True
+    ):
         _requested_format = context.user_data.get('requested_format')
         source_file_type = context.user_data.get('source_file_type')
         source_file_path = context.user_data.get('source_file_path')
@@ -145,7 +150,8 @@ class FileConversation:
                     document_path=destination_file_path,
                     file_name=f'{custom_file_name}.{_requested_format}'
                 )
-                self.io_service.remove_file(source_file_path)
+                if should_delete_source_file:
+                    self.io_service.remove_file(source_file_path)
                 return self.ask_convert_additional_file(update)
         except Exception as e:
             raise FileConversionError(
