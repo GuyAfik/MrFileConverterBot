@@ -14,9 +14,12 @@ jobs:
       - name: Install wkhtmltopdf and tesseract
         run: |
           sudo apt-get install -y wkhtmltopdf tesseract-ocr-heb
-      - name: Install pipenv
-        uses: dschep/install-pipenv-action@v1
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.2.2
       - name: Run unit-tests
         run: |
-          pipenv install --dev
-          pipenv run pytest
+          poetry config virtualenvs.create false
+          poetry install
+          poetry run pytest
