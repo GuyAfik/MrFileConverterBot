@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "mrfileconverterbot"
+version = "0.1.0"
+description = ""
+authors = ["GuyAfik <guyafik11@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-telegram-bot = "*"
+pytube = "*"
+dependency-injector = "*"
+python-magic = "*"
+ujson = "*"
+"ruamel.yaml" = "*"
+xmltodict = "*"
+dict2xml = "*"
+pdfkit = "*"
+html2image = "*"
+bs4 = "*"
+pdf2docx = "*"
+imgkit = "*"
+pypdf2 = "*"
+html2text = "*"
+img2pdf = "*"
+pillow = "*"
+pytesseract = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+pytest-mock = "^3.10.0"
+pre-commit = "^2.20.0"
+mypy = "^0.982"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
