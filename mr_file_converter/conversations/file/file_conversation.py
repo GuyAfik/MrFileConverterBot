@@ -149,8 +149,6 @@ class FileConversation:
                     document_path=destination_file_path,
                     file_name=f'{custom_file_name}.{_requested_format}'
                 )
-                if should_delete_source_file:
-                    self.io_service.remove_file(source_file_path)
                 return self.ask_convert_additional_file(update)
         except Exception as e:
             raise FileConversionError(
@@ -158,6 +156,9 @@ class FileConversation:
                 target_format=_requested_format,
                 original_exception=e
             )
+        finally:
+            if should_delete_source_file:
+                self.io_service.remove_file(source_file_path)
 
     def get_service(self, source_file_type: str, _requested_format: str) -> Callable:
 
