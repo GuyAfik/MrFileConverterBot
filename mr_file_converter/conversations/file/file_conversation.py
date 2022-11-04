@@ -82,8 +82,7 @@ class FileConversation:
         file_path = self.telegram_service.get_file(update)
         context.user_data['source_file_path'] = file_path
         file_type = from_file(file_path, mime=True)
-        print(file_type)
-        print(file_path)
+        print(f'{file_type=}, {file_path=}')
         logger.debug(f'The type of the file {file_path} is {file_type}')
 
         if file_type == 'text/plain' and (
