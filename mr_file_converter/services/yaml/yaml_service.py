@@ -1,4 +1,3 @@
-import os
 from contextlib import contextmanager
 from typing import Generator
 
@@ -22,12 +21,12 @@ class YamlService:
         self.xml_converter = xml_converter
 
     @contextmanager
-    def to_json(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_json(self, source_file_path: str, custom_file_name: str) -> Generator[str, None, None]:
         """
         Converts json to yml file.
         """
         with self.io_service.create_temp_json_file(
-            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name
         ) as json_file:
             self.json_converter.write(
                 data=self.yml_converter.read(source_file_path),
@@ -36,12 +35,12 @@ class YamlService:
             yield json_file
 
     @contextmanager
-    def to_text(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_text(self, source_file_path: str, custom_file_name: str) -> Generator[str, None, None]:
         """
         Converts yml to a file that is a string representation of the yml.
         """
         with self.io_service.create_temp_txt_file(
-            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name
         ) as text_file:
             self.io_service.write_data_to_file(
                 data=self.yml_converter.dumps(
@@ -51,9 +50,9 @@ class YamlService:
             yield text_file
 
     @contextmanager
-    def to_xml(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_xml(self, source_file_path: str, custom_file_name: str) -> Generator[str, None, None]:
         with self.io_service.create_temp_xml_file(
-            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name
         ) as xml_file:
             self.xml_converter.write(
                 data=self.yml_converter.read(source_file_path),

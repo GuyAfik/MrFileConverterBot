@@ -1,4 +1,3 @@
-import os
 from contextlib import contextmanager
 from typing import Generator
 
@@ -17,17 +16,17 @@ class PdfService:
         self.io_service = io_service
 
     @contextmanager
-    def to_docx(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_docx(self, source_file_path: str, custom_file_name: str) -> Generator[str, None, None]:
         with self.io_service.create_temp_docx_file(
-            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name
         ) as docx_file:
             pdf2docx.parse(source_file_path, docx_file)
             yield docx_file
 
     @contextmanager
-    def to_txt(self, source_file_path: str, custom_file_name: str | None = None) -> Generator[str, None, None]:
+    def to_txt(self, source_file_path: str, custom_file_name: str) -> Generator[str, None, None]:
         with self.io_service.create_temp_txt_file(
-            prefix=custom_file_name or os.path.splitext(source_file_path)[0]
+            prefix=custom_file_name
         ) as txt_file:
             with open(source_file_path, 'rb') as pdf_file:
                 pdf_reader = PyPDF2.PdfFileReader(pdf_file)
