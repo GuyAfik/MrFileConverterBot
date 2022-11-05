@@ -58,11 +58,8 @@ class IOService:
 
     @contextmanager
     def create_temp_png_file(self, prefix: str) -> Generator[str, None, None]:
-        try:
-            with self.create_temp_file(prefix=prefix, suffix=".png") as out_path:
-                yield out_path
-        finally:
-            pass
+        with self.create_temp_file(prefix=prefix, suffix=".png") as out_path:
+            yield out_path
 
     @contextmanager
     def create_temp_jpg_file(self, prefix: str) -> Generator[str, None, None]:
