@@ -262,7 +262,7 @@ class TestErrorHandler:
         assert send_message_mock.call_args_list[0].kwargs['text'] == telegram_err_msg
 
 
-def test_cancel_delete_source_file_path(
+def test_cancel_conversation(
     mocker: MockerFixture,
     command_service: CommandService,
     telegram_update: Update,
@@ -281,12 +281,15 @@ def test_cancel_delete_source_file_path(
      - make sure the source file gets deleted
      - make sure next stage is the 'ConversationHandler.END' which ends the conversation
      - make sure the help message is called when next_stage == 'ConversationHandler.END'
+     - make sure the user data of context is cleared
     """
     file_name = 'test_file'
     telegram_context.user_data['source_file_path'] = open(file_name, 'w').name
+    telegram_context.user_data['requested_format'] = 'pdf'
     help_mocker = mocker.patch.object(command_service, 'help')
     next_stage = command_service.cancel(telegram_update, telegram_context)
 
     assert not os.path.exists(file_name)
     assert next_stage == ConversationHandler.END
     assert help_mocker.called
+    assert not telegram_context.user_data
