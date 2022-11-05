@@ -22,7 +22,8 @@ class CommandService:
 
     def help(self, update: Update, context: CallbackContext):
         first_name, last_name = self.telegram_service.get_user_first_and_last_name(
-            update)
+            update
+        )
         self.telegram_service.send_message(
             update=update,
             text=f'Hello {first_name} {last_name}, This bot supports the following commands:\n\n'
@@ -42,6 +43,7 @@ class CommandService:
             self.io_service.remove_file(source_file_path)
         if next_stage == ConversationHandler.END:
             self.help(update, context)
+        context.user_data.clear()
         return next_stage
 
     def error_handler(self, update: Update, context: CallbackContext) -> int:
