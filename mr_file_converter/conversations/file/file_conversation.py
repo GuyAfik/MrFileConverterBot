@@ -210,5 +210,6 @@ class FileConversation:
         if answer == 'yes':
             return self.start_message(update, context)
         self.telegram_service.edit_message(
-            update, text='Thank you! Run /start or /help to view available commands')
+            update, text='Thank you! Run /start or /help to view available commands'
+        )
         return ConversationHandler.END

@@ -111,7 +111,8 @@ class URLConversation:
     def get_service(self, requested_format: str) -> Callable:
         if requested_format not in self.FileTypes.supported_file_types():
             raise ValueError(
-                f'the requested format {requested_format} is not supported')
+                f'the requested format {requested_format} is not supported'
+            )
 
         format_to_service_func = {
             self.FileTypes.PDF: self.url_service.to_pdf,
@@ -137,5 +138,6 @@ class URLConversation:
         if answer == 'yes':
             return self.start_message(update, context)
         self.telegram_service.edit_message(
-            update, text='Thank you! Run /start or /help to view available commands')
+            update, text='Thank you! Run /start or /help to view available commands'
+        )
         return ConversationHandler.END
