@@ -36,5 +36,6 @@ class RueamelYamlConverter(BaseConverter):
                 self.yml.dump(data, file)
         except ValueError as e:
             logger.error(
-                f'Failed to write {data} into YAML file {file_path}, error: {e}')
+                f'Failed to write {data} into YAML file {file_path}, error: {e}'
+            )
             raise e

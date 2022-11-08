@@ -44,7 +44,8 @@ class YamlService:
         ) as text_file:
             self.io_service.write_data_to_file(
                 data=self.yml_converter.dumps(
-                    self.yml_converter.read(source_file_path)),
+                    self.yml_converter.read(source_file_path)
+                ),
                 file_path=text_file
             )
             yield text_file

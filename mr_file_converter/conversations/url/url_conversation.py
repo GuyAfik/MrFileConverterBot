@@ -49,7 +49,8 @@ class URLConversation:
 
     def start_message(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
-            update=update, text='Please add here a URL you would like to convert into a file')
+            update=update, text='Please add here a URL you would like to convert into a file'
+        )
         return self.check_url_validity_stage
 
     def check_url_validity(self, update: Update, context: CallbackContext) -> int:
@@ -64,7 +65,8 @@ class URLConversation:
             self.urlopen(url, context=ignore_ssl())
         except Exception as e:
             raise InvalidURL(
-                url=url, next_stage=self.check_url_validity_stage, exception=e)
+                url=url, next_stage=self.check_url_validity_stage, exception=e
+            )
 
         context.user_data['url'] = url
         self.telegram_service.reply_to_message(

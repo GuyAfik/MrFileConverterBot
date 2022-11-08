@@ -26,7 +26,8 @@ class YoutubeDownloaderConversation:
 
     def ask_youtube_url(self, update: Update, context: CallbackContext):
         self.telegram_service.send_message(
-            update, text=f'Please enter the youtube URL')
+            update, text=f'Please enter the youtube URL'
+        )
         return self.check_youtube_url_stage
 
     def check_youtube_url(self, update: Update, context: CallbackContext):
