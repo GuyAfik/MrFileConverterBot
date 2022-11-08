@@ -27,8 +27,7 @@ class RueamelYamlConverter(BaseConverter):
         try:
             return self.yml.load(Path(file_path))
         except ValueError as e:
-            logger.error(f'Failed to load YAML file {file_path}, error: {e}'
-                         )
+            logger.error(f'Failed to load YAML file {file_path}, error: {e}')
             raise e
 
     def write(self, data: Any, file_path: str):
