@@ -48,7 +48,8 @@ class YouTubeVideoDownloaderService(YouTubeDownloaderService):
             return self
         except Exception as e:
             logger.error(
-                f'Could not download youtube video {self._youtube.watch_url}. Error:\n{e}')
+                f'Could not download youtube video {self._youtube.watch_url}. Error:\n{e}'
+            )
             raise e
 
     def send(self, update: Update) -> int:
@@ -79,7 +80,8 @@ class YouTubeAudioDownloaderService(YouTubeDownloaderService):
             return self
         except Exception as e:
             logger.error(
-                f'Could not download youtube audio {self._youtube.watch_url}. Error:\n{e}')
+                f'Could not download youtube audio {self._youtube.watch_url}. Error:\n{e}'
+            )
             raise e
 
     def send(self, update: Update) -> int:
