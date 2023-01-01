@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-python-telegram-bot = "*"
+python-telegram-bot = "13.14"
 pytube = "*"
 dependency-injector = "*"
 python-magic = "*"
