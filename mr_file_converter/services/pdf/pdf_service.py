@@ -29,7 +29,7 @@ class PdfService:
             prefix=custom_file_name
         ) as txt_file:
             with open(source_file_path, 'rb') as pdf_file:
-                pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+                pdf_reader = PyPDF2.PdfReader(pdf_file)
                 pdf_text_content = '\n'.join(
                     page.extractText() for page in pdf_reader.pages
                 )
