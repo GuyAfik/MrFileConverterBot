@@ -31,7 +31,7 @@ class PdfService:
             with open(source_file_path, 'rb') as pdf_file:
                 pdf_reader = PyPDF2.PdfReader(pdf_file)
                 pdf_text_content = '\n'.join(
-                    page.extractText() for page in pdf_reader.pages
+                    page.extract_text() for page in pdf_reader.pages
                 )
                 self.io_service.write_data_to_file(
                     data=pdf_text_content, file_path=txt_file
